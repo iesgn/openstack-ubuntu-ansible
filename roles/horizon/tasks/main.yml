@@ -1,0 +1,61 @@
+# - name: ensure python-xstatic-magic-search >= 2.5.1 is installed from testing (BUG!)
+#   apt: name={{ item }} 
+#   with_items:
+#     - python-xstatic-magic-search
+#     - python-xstatic-angular
+
+# - name: ensure python-django is installed 
+#   apt: name={{ item }} 
+#   with_items:
+#     - python-django
+#     - python-django-appconf           
+#     - python-django-babel             
+#     - python-django-common            
+#     - python-django-compressor        
+#     - python-django-pyscss
+    
+- name: ensure apache and memcached packages are installed
+  apt: pkg={{ item }} 
+  with_items:
+    - memcached
+    - apache2
+    - libapache2-mod-wsgi
+    
+- name: ensure horizon packages are installed 
+  apt: pkg={{ item }}  
+  with_items:
+    - python-django-horizon
+    - openstack-dashboard
+#    - openstack-dashboard-apache
+    
+- name: ensure dashboard is configured
+  template: >
+    src=etc/openstack-dashboard/local_settings.py
+    dest=/etc/openstack-dashboard/local_settings.py
+    owner=root group=root mode=0644
+  notify: restart web services
+
+# - name: ensure default virtualhost is disabled
+#   command: a2dissite {{ item }}
+#   with_items:
+#     - 000-default
+#     - default-ssl
+#     - openstack-dashboard-alias-only
+    
+#   notify: restart web services
+
+# - name: ensure openstack-dashboard-ssl virtualhost is enabled
+#   command: a2ensite {{ item }}
+#   with_items:
+#     - openstack-dashboard-ssl
+#     - openstack-dashboard-ssl-redirect
+    
+#   notify: restart web services
+  
+- name: ensure ssl, wsgi and rewrite modules are enabled
+  apache2_module: name={{ item }} state=present
+  with_items:
+    - wsgi
+    - ssl
+    - rewrite
+  notify: restart web services

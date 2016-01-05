@@ -1,0 +1,35 @@
+- name: ensure software-properties-common is installed
+  apt: name=software-properties-common state=latest
+
+# - name: Ensure ppa:kilo is added
+#   command: add-apt-repository cloud-archive:kilo
+    
+# - name: Ensure sources.list file is properly defined 
+#   template: >
+#     src=etc/apt/sources.list
+#     dest=/etc/apt/sources.list
+#     owner=root
+#     group=root
+#     mode=0644
+# - name: Ensure apt-pinning is set properly 
+#   copy: >
+#     src=etc/apt/preferences
+#     dest=/etc/apt/preferences
+#     owner=root
+#     group=root
+#     mode=0644
+  
+- name: Ensure system is upgraded (It can take a long time)
+  apt: upgrade=yes update_cache=yes
+
+- name: Ensure ntp is installed
+  apt: name=ntp 
+  notify: restart ntp
+
+# - name: Ensure /etc/hosts is properly defined
+#   copy: >-
+#     src=etc/hosts
+#     dest=/etc/hosts
+#     owner=root
+#     group=root
+#     mode=0644
