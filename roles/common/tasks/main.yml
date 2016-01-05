@@ -1,23 +1,12 @@
 - name: ensure software-properties-common is installed
   apt: name=software-properties-common state=latest
 
-# - name: Ensure ppa:kilo is added
-#   command: add-apt-repository cloud-archive:kilo
-    
-# - name: Ensure sources.list file is properly defined 
-#   template: >
-#     src=etc/apt/sources.list
-#     dest=/etc/apt/sources.list
-#     owner=root
-#     group=root
-#     mode=0644
-# - name: Ensure apt-pinning is set properly 
-#   copy: >
-#     src=etc/apt/preferences
-#     dest=/etc/apt/preferences
-#     owner=root
-#     group=root
-#     mode=0644
+- name: ensure ubuntu cloud keyring is installed
+  apt: name=ubuntu-cloud-keyring state=latest
+  
+- name: Ensure ubuntu cloud archive for kilo is added
+  apt_repository: >-
+    repo="deb http://ubuntu-cloud.archive.canonical.com/ubuntu trusty-updates/kilo main"
   
 - name: Ensure system is upgraded (It can take a long time)
   apt: upgrade=yes update_cache=yes
