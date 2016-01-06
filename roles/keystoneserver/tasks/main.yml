@@ -1,9 +1,3 @@
-- name: ensure python-sqlalchemy < 0.10 is installed
-  apt: name=python-sqlalchemy 
-
-# - name: ensure python-cryptography (>=1.0) is installed (backport BUG)
-#   apt: name=python-cryptography default_release=testing state=latest
-  
 - name: ensure keystone packages are installed
   apt: name={{ item }} 
   with_items:
@@ -11,7 +5,7 @@
     - python-keystone
     - python-keystoneclient
     - python-oslo.db
-  notify: start keystone
+  notify: restart keystone
   
 - name: ensure sqlite keystone database is deleted
   file: dest=/var/lib/keystone/keystone.db state=absent
