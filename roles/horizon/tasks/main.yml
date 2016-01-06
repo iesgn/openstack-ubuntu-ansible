@@ -1,32 +1,15 @@
-# - name: ensure python-xstatic-magic-search >= 2.5.1 is installed from testing (BUG!)
-#   apt: name={{ item }} 
-#   with_items:
-#     - python-xstatic-magic-search
-#     - python-xstatic-angular
-
-# - name: ensure python-django is installed 
-#   apt: name={{ item }} 
-#   with_items:
-#     - python-django
-#     - python-django-appconf           
-#     - python-django-babel             
-#     - python-django-common            
-#     - python-django-compressor        
-#     - python-django-pyscss
-    
 - name: ensure apache and memcached packages are installed
-  apt: pkg={{ item }} 
+  apt: name={{ item }} 
   with_items:
     - memcached
     - apache2
     - libapache2-mod-wsgi
     
 - name: ensure horizon packages are installed 
-  apt: pkg={{ item }}  
+  apt: name={{ item }}  
   with_items:
     - python-django-horizon
     - openstack-dashboard
-#    - openstack-dashboard-apache
     
 - name: ensure dashboard is configured
   template: >
