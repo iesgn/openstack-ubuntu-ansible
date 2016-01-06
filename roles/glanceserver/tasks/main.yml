@@ -1,6 +1,3 @@
-- name: ensure sudo is installed
-  apt: name=sudo state=present 
-
 - name: ensure glance is installed
   apt: name={{ item }} 
   with_items:
