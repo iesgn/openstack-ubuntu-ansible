@@ -7,7 +7,6 @@
     - nova-consoleauth
     - nova-scheduler
     - python-novaclient
-#    - nova-consoleproxy
     - nova-novncproxy
 
 - name: ensure nova sqlite is deleted
