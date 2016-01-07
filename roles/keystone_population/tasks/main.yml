@@ -95,7 +95,15 @@
     - { name: 'heat' }
     - { name: 'trove' }
 
-- name: ensure openrc admin file is created in root home directory
+- name: ensure openrc (API 2.0) admin file is created in root home directory
+  template: >-
+    src=root/openrc_2.0
+    dest=/root/admin_openrc_2.0.sh
+    owner=root
+    group=root
+    mode=600
+
+- name: ensure openrc (API 3) admin file is created in root home directory
   template: >-
     src=root/openrc
     dest=/root/admin_openrc.sh
