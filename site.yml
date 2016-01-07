@@ -66,10 +66,6 @@
 
 - hosts: controller-nodes
   roles:
-    - role: horizon-temporal
-
-- hosts: controller-nodes
-  roles:
     - role: cinderserver
 
 - hosts: storage-nodes

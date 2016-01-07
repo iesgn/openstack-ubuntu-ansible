@@ -9,6 +9,7 @@
   - nova-consoleauth
   - nova-cert
   - nova-scheduler
+  - nova-compute
 
 - name: Ensure cinder services are restarted
   service: name={{ item }} state=restarted
