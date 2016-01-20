@@ -1,7 +1,7 @@
 openstack-ubuntu-ansible
 ========================
 
-Ansible playbooks for installing OpenStack Kilo on Ubuntu Trusty (14.04)
+Ansible playbooks for installing OpenStack on Ubuntu.
 
 These playbooks have been written in the hope of using them in a real deployment
 with physical servers, but thay can be used too to deploy a OpenStack test
@@ -9,7 +9,7 @@ environment with vagrant inside a computer.
 
 **This is still a work in progress**
 
-## Software used (specific versions):
+## Software used at this moment (specific versions):
 
 - Ubuntu 14.04 LTS
 - Linux kernel: 3.13.0-74-generic
@@ -27,7 +27,7 @@ Keystone, Glance, Nova (KVM/Qemu), Neutron (OVS) and Cinder (LVM+iSCSI)
 
 [Per tenant router with private networks](http://docs.openstack.org/havana/install-guide/install/apt/content/section_networking-routers-with-private-networks.html)
 
-## Get a debian jessie vagrant box:
+## Get a ubuntu trusty vagrant box:
 
 Tested using the ubuntu "official" vagrant box available at:
 
