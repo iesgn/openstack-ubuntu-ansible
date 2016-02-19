@@ -4,12 +4,6 @@
 - name: ensure IPv4 default rp filter is deactivated
   sysctl: name=net.ipv4.conf.default.rp_filter value=0 state=present reload=yes
 
-# When those bits are enabled:
-#
-# sysctl: cannot stat /proc/sys/net/bridge/bridge-nf-call-iptables: No such file or directory
-#
-# So the're commented out
-#
 - name: ensure nf call for IPv4 is activated
   sysctl: name=net.bridge.bridge-nf-call-iptables value=1 state=present reload=yes
 

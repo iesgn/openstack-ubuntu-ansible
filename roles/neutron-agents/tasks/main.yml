@@ -11,10 +11,11 @@
   apt: name={{ item }} 
   with_items:
     - neutron-common
+    - neutron-plugin-ml2
     - neutron-plugin-openvswitch-agent
-    - neutron-metadata-agent
     - neutron-l3-agent
     - neutron-dhcp-agent
+    - neutron-metadata-agent
             
 - name: ensure neutron.conf is configured
   template: >
