@@ -56,9 +56,9 @@
   roles:
     - role: openvswitch
 
-# - hosts: compute-nodes
-#   roles:
-#     - role: neutron-agents-compute
+- hosts: compute-nodes
+  roles:
+    - role: neutron-agents-compute
 
 - hosts: controller-nodes
   roles:
