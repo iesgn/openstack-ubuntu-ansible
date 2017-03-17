@@ -1,20 +1,20 @@
-- name: Ensure mariadb server and mysql python client are installed
+- name: Ensure mysql server and mysql python client are installed
   apt: pkg={{ item }} 
   with_items:
     - python-mysqldb
-    - mariadb-server
+    - mysql-server
 
-- name: Ensure mariadb binds to internal interface
+- name: Ensure mysql binds to internal interface
   template: >
-    src=etc/mariadb.cnf 
-    dest=/etc/mysql/mariadb.cnf 
+    src=etc/my.cnf 
+    dest=/etc/mysql/my.cnf 
     owner=root 
     group=root 
     mode=0644
   notify: restart mysql
 
 # http://dev.mysql.com/doc/refman/5.6/en/default-privileges.html
-- name: update mariadb root password for all root accounts
+- name: update mysql root password for all root accounts
   mysql_user: >
     name=root
     host=localhost
@@ -29,7 +29,7 @@
     owner=root
     mode=0600
 
-- name: update mariadb root password for all root accounts
+- name: update mysql root password for all root accounts
   mysql_user: >
     name=root
     host={{ item }}
@@ -45,10 +45,4 @@
     - "{{ inventory_hostname_short }}"
     - 127.0.0.1
     - ::1
-
-- name: Reload privilege tables
-  command: 'mysql -ne "{{ item }}"'
-  with_items:
-    - FLUSH PRIVILEGES
-  changed_when: False
 
