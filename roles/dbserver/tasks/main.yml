@@ -6,8 +6,8 @@
 
 - name: Ensure mariadb binds to internal interface
   template: >
-    src=etc/my.cnf 
-    dest=/etc/mysql/my.cnf 
+    src=etc/mariadb.cnf 
+    dest=/etc/mysql/mariadb.cnf 
     owner=root 
     group=root 
     mode=0644
