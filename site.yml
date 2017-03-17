@@ -1,12 +1,12 @@
 ---
 
-- hosts: all
-  roles:
-    - role: common
-
-# - hosts: controller-nodes
+# - hosts: all
 #   roles:
-#     - role: dbserver
+#     - role: common
+
+- hosts: controller-nodes
+  roles:
+    - role: dbserver
 
 # - hosts: controller-nodes
 #   roles:
