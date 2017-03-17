@@ -46,3 +46,9 @@
     - 127.0.0.1
     - ::1
 
+- name: Reload privilege tables
+  command: 'mysql -ne "{{ item }}"'
+  with_items:
+    - FLUSH PRIVILEGES
+  changed_when: False
+
