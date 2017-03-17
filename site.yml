@@ -1,8 +1,8 @@
 ---
 
-# - hosts: all
-#   roles:
-#     - role: common
+- hosts: all
+  roles:
+    - role: common
 
 # - hosts: controller-nodes
 #   roles:
@@ -32,9 +32,9 @@
 #   roles: 
 #     - role: glanceserver
 
-- hosts: storage-nodes
-  roles: 
-    - role: glance_population
+# - hosts: storage-nodes
+#   roles: 
+#     - role: glance_population
 
 # - hosts: controller-nodes
 #   roles:
