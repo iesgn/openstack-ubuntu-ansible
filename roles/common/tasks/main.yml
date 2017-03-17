@@ -4,7 +4,7 @@
 - name: ensure ubuntu cloud keyring is installed
   apt: name=ubuntu-cloud-keyring state=latest
   
-- name: Ensure ubuntu cloud archive for kilo is added
+- name: Ensure ubuntu cloud archive for ocata is added
   apt_repository: >-
     repo="deb http://ubuntu-cloud.archive.canonical.com/ubuntu xenial-updates/ocata main"
   
