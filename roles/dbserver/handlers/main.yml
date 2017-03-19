@@ -1,2 +1,2 @@
-- name: restart mysql
+- name: restart mariadb
   service: name=mysql state=restarted
