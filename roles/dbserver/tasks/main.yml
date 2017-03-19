@@ -53,6 +53,7 @@
     - "{{ controller_ip }}"
     - "{{ inventory_hostname_short }}"
     - 127.0.0.1
+    - localhost
     - ::1
 
 
