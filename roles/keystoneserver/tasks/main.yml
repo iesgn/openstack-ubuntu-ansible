@@ -2,7 +2,7 @@
   apt: name={{ item }} 
   with_items:
     - keystone
-  notify: restart keystone
+
   
 - name: ensure sqlite keystone database is deleted
   file: dest=/var/lib/keystone/keystone.db state=absent
