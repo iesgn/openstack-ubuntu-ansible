@@ -21,13 +21,13 @@
 #    - role: memcached
 
 
- - hosts: all
-   roles:
-     - role: openstackclient
-
-# - hosts: controller-nodes
+# - hosts: all
 #   roles:
-#     - role: keystoneserver
+#     - role: openstackclient
+
+ - hosts: controller-nodes
+   roles:
+     - role: keystoneserver
       
 # - hosts: controller-nodes
 #   roles:
