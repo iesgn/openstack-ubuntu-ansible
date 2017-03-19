@@ -3,7 +3,7 @@
 
 
 - name: Ensure rabbitqn server nodename defined
-  files: >
+  file: >
     src=etc/rabbitmq-env.conf
     dest=/etc/rabbitmq/rabbitmq-env.conf 
     owner=root 
