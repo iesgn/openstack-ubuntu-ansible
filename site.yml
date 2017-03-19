@@ -16,14 +16,14 @@
 #   roles:
 #     - role: rabbitserver
 
-- hosts: controller-nodes
-  roles:
-    - role: memcached
+#- hosts: controller-nodes
+#  roles:
+#    - role: memcached
 
 
-# - hosts: all
-#   roles:
-#     - role: openstackclient
+ - hosts: all
+   roles:
+     - role: openstackclient
 
 # - hosts: controller-nodes
 #   roles:
