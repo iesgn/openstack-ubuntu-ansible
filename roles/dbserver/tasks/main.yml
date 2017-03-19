@@ -45,6 +45,7 @@
     password={{ root_db_password }}
   with_items:
     - "{{ controller_ip }}"
+    - localhost
     - 127.0.0.1
 
 - name: ensure anonymous users are not in the database
@@ -53,7 +54,6 @@
     - "{{ controller_ip }}"
     - "{{ inventory_hostname_short }}"
     - 127.0.0.1
-    - localhost
     - ::1
 
 
