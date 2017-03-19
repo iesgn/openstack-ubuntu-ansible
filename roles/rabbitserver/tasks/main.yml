@@ -11,5 +11,4 @@
     write_priv=.*
     state=present
     force=yes
-    node=controller
 
