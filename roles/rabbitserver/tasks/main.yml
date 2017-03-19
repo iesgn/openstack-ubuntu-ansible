@@ -1,6 +1,16 @@
 - name: Ensure rabbitmq is installed
   apt: pkg=rabbitmq-server 
 
+
+- name: Ensure rabbitqn server nodename defined
+  files: >
+    src=etc/rabbitmq-env.conf
+    dest=/etc/rabbitmq/rabbitmq-env.conf 
+    owner=root 
+    group=root 
+    mode=0644
+  notify: restart rabbitmq
+
 - name: Ensure openstack rabbitmq user password is changed
   rabbitmq_user: >
     user={{ rabbit_user }}
