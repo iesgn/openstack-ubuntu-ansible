@@ -4,13 +4,13 @@
 #   roles:
 #     - role: common
 
-- hosts: controller-nodes
-  roles:
-    - role: dbserver
+#- hosts: controller-nodes
+#  roles:
+#    - role: dbserver
 
-# - hosts: controller-nodes
-#   roles:
-#     - role: dbserver_population
+ - hosts: controller-nodes
+   roles:
+     - role: dbserver_population
 
 # - hosts: controller-nodes
 #   roles:
