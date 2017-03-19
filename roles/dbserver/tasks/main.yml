@@ -18,7 +18,7 @@
 # UPDATE mysql.user SET Password=PASSWORD('mysecret') WHERE User='root';
 # FLUSH PRIVILEGES;
 
--- name: update mysql root password for all root accounts
+- name: update mysql root password for all root accounts
   mysql_user: >
     name=root
     host=localhost
