@@ -6,16 +6,16 @@ rabbit_user: "openstack"
 rabbit_password: "asdasd"
 
 # # IPs
-controller_ip: 192.168.222.107
-storage_ip: 192.168.222.107
-network_node_ip: 192.168.222.107
+controller_ip: 192.168.1.101
+storage_ip: 192.168.1.101
+network_node_ip: 192.168.1.101
 network_node_netmask: 255.255.255.0
-controller_external_ip: 172.22.2.182
-storage_external_ip: 172.22.2.182
-network_node_external_ip: 172.22.2.182
+controller_external_ip: 172.22.1.101
+storage_external_ip: 172.22.1.101
+network_node_external_ip: 172.22.1.101
 network_node_external_netmask: 255.255.0.0
 network_node_external_CIDR: 16
-external_gateway: 172.22.0.1
+external_gateway: 172.22.1.1
 int_net_nic: p2p1
 ext_net_nic: p2p2
 
