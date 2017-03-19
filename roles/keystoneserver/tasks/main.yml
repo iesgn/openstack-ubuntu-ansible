@@ -13,7 +13,7 @@
     dest=/etc/keystone/keystone.conf
     owner=keystone
     group=keystone
-    mode=0600#
+    mode=0600
 
 - name: DB sync for keystone
   shell: >
