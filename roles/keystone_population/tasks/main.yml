@@ -1,5 +1,5 @@
 - name: verify if default domain has been created
-  environment: {{'k3'}}
+  environment: '{{k3}}'
   command: /usr/bin/openstack domain show default
   register: result
   ignore_errors: True
