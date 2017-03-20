@@ -25,13 +25,13 @@
 #   roles:
 #     - role: openstackclient
 
-# - hosts: controller-nodes
-#   roles:
-#     - role: keystoneserver
-      
  - hosts: controller-nodes
    roles:
-     - role: keystone_population
+     - role: keystoneserver
+      
+# - hosts: controller-nodes
+#   roles:
+#     - role: keystone_population
       
 # - hosts: storage-nodes
 #   roles: 
