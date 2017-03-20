@@ -2,6 +2,7 @@
   apt: name={{ item }} 
   with_items:
     - keystone
+    - python-keystone
 
   
 - name: ensure sqlite keystone database is deleted
@@ -28,3 +29,9 @@
     group=root
     mode=0600
   notify: restart keystone
+
+- name: Fernet keys initialization
+  shell: /usr/bin/keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone && keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+
+- name: bootstrap identity service
+  shell: keystone-manage bootstrap --bootstrap-password {{ admin_pass }} --bootstrap-admin-url http://{{ controller_ip }}:35357/v3/ --bootstrap-internal-url http://{{ controller_ip }}:35357/v3/ --bootstrap-public-url http://{{ controller_ip }}:5000/v3/ --bootstrap-region-id {{ region }}
