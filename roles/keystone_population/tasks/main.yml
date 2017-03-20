@@ -1,11 +1,11 @@
 - name: verify if default domain has been created
-  environment: k3
+  environment: "k3"
   command: /usr/bin/openstack domain show default
   register: result
   ignore_errors: True
 
 - name: ensure default domain is created
-  environment: k3
+  environment: "k3"
   command: /usr/bin/openstack domain create --description "Default Domain" default
   when: result|failed
 
