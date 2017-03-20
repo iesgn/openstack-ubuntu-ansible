@@ -1,3 +1,9 @@
+# KEYSTONE_3
+k3:
+  OS_TOKEN: '012345SECRET99TOKEN012345'
+  OS_URL: 'http://192.168.222.22:35357/v3'
+  OS_IDENTITY_API_VERSION: 3 
+
 # APT Repository
 repo_fqdn: http.debian.net
 
@@ -16,8 +22,8 @@ network_node_external_ip: 172.22.1.101
 network_node_external_netmask: 255.255.0.0
 network_node_external_CIDR: 16
 external_gateway: 172.22.1.1
-int_net_nic: p2p1
-ext_net_nic: p2p2
+int_net_nic: ens3
+ext_net_nic: ens4
 
 # # MySQL passwords
 root_db_password: "asdasd" 
@@ -28,6 +34,7 @@ nova_db_password: "asdasd"
 neutron_db_password: "asdasd"
 heat_db_password: "asdasd"
 trove_db_password: "asdasd"
+magnum_db_password: "asdasd"
 
 
 # # Keystone identity passwords:
@@ -38,6 +45,7 @@ neutron_identity_password: "neutron"
 cinder_identity_password: "cinder"
 heat_identity_password: "heat"
 trove_identity_password: "trove"
+magnum_identity_password: "magnum"
 
 # # OpenStack variables
 admin_token: "012345SECRET99TOKEN012345"
