@@ -3,18 +3,24 @@
  - hosts: all
    roles:
      - role: common
+
 - hosts: controller-nodes
   roles:
     - role: dbserver
+
  - hosts: controller-nodes
    roles:
      - role: dbserver_population
+
  - hosts: controller-nodes
    roles:
      - role: rabbitserver
+
 - hosts: controller-nodes
   roles:
     - role: memcached
+
+
  - hosts: all
    roles:
      - role: openstackclient
