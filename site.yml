@@ -8,9 +8,9 @@
 #  roles:
 #    - role: dbserver
 
-- hosts: controller-nodes
-  roles:
-    - role: dbserver_population
+#- hosts: controller-nodes
+#  roles:
+#    - role: dbserver_population
 
 #- hosts: controller-nodes
 #  roles:
@@ -33,13 +33,13 @@
 #  roles:
 #    - role: keystone_population
 
+#- hosts: storage-nodes
+#  roles: 
+#    - role: glanceserver
+
 - hosts: storage-nodes
   roles: 
-    - role: glanceserver
-
-# - hosts: storage-nodes
-#   roles: 
-#     - role: glance_population
+    - role: glance_population
 
 # - hosts: controller-nodes
 #   roles:
