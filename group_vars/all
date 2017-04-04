@@ -29,6 +29,8 @@ external_gateway: 172.22.1.1
 int_net_nic: ens3
 ext_net_nic: ens4
 
+controller_fqdn: 'controller'
+
 # # MySQL passwords
 root_db_password: "asdasd" 
 keystone_db_password: "asdasd"
