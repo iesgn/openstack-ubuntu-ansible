@@ -58,11 +58,7 @@
 
 
 
-- name: Reload privilege tables
-  command: 'mysql -ne "{{ item }}"'
-  with_items:
-    - FLUSH PRIVILEGES
-  changed_when: False
+
 
 
 
