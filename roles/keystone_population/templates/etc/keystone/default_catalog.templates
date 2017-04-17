@@ -63,3 +63,10 @@ catalog.{{ region }}.container.adminURL = http://{{ controller_ip }}:9511/v1
 catalog.{{ region }}.container.internalURL = http://{{ controller_ip }}:9511/v1
 catalog.{{ region }}.container.name = magnum
 
+
+
+catalog.{{ region }}.placement.publicURL = http://{{ controller__ip }}/placement
+catalog.{{ region }}.placement.adminURL = http://{{ controller__ip }}/placement
+catalog.{{ region }}.placement.internalURL = http://{{ controller__ip }}/placement
+catalog.{{ region }}.placement.name = placement
+

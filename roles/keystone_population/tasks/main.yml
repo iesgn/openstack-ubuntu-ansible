@@ -136,7 +136,24 @@
 - name: ensure admin role is added to nova user
   environment: '{{k3}}'
   command: openstack role add --project service --user nova admin
-  
+
+# Placement
+
+- name: verify if Placement user has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user show placement
+  register: result
+  ignore_errors: True
+
+- name: ensure placement user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identitu_password }}
+  when: result|failed
+
+- name: ensure admin role is added to placement user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user placement admin
+
 # Neutron
 - name: verify if neutron user has been created
   environment: '{{k3}}'

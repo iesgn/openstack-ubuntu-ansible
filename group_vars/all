@@ -51,6 +51,8 @@ heat_identity_password: "heat"
 trove_identity_password: "trove"
 magnum_identity_password: "magnum"
 
+placement_identity_password: "placement"
+
 # # OpenStack variables
 admin_token: "012345SECRET99TOKEN012345"
 region: RegionOne
