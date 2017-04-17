@@ -11,7 +11,7 @@
     owner=root 
     group=root 
     mode=0644
-  notify: restart mysql
+  notify: restart mariadb
 
 
 # Set root password
