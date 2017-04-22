@@ -147,7 +147,7 @@
 
 - name: ensure placement user is created
   environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identitu_password }}
+  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identity_password }}
   when: result|failed
 
 - name: ensure admin role is added to placement user
