@@ -30,3 +30,10 @@
   notify: 
   - restart nova-compute
 
+- name: create the cell1 cell
+  command: /usr/bin/nova-manage cell_v2 discover_hosts
+  ignore_errors: True
+  notify: 
+  - restart nova-services
+
+
