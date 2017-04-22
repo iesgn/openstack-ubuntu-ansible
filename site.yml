@@ -41,13 +41,13 @@
   roles: 
     - role: glance_population
 
-# - hosts: controller-nodes
-#   roles:
-#     - role: novaserver
+ - hosts: controller-nodes
+   roles:
+     - role: novaserver
 
-# - hosts: compute-nodes
-#   roles:
-#     - role: novacompute
+ - hosts: compute-nodes
+   roles:
+     - role: novacompute
 
 # - hosts: controller-nodes
 #   roles:

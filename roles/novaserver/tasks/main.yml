@@ -2,12 +2,12 @@
   apt: name={{ item }} 
   with_items:
     - nova-api
-    - nova-cert
     - nova-conductor
     - nova-consoleauth
     - nova-scheduler
     - python-novaclient
     - nova-novncproxy
+    - nova-placement-api
 
 - name: ensure nova sqlite is deleted
   file: dest=/var/lib/nova/nova.sqlite state=absent
@@ -22,13 +22,18 @@
   notify: 
   - restart nova-services
 
-- name: ensure default nova-consoleproxy file is present
-  template: >
-    src=etc/default/nova-consoleproxy
-    dest=/etc/default/nova-consoleproxy
-    owner=root
-    group=root
-    mode=0644
+#- name: ensure default nova-consoleproxy file is present
+#  template: >
+#    src=etc/default/nova-consoleproxy
+#    dest=/etc/default/nova-consoleproxy
+#    owner=root
+#    group=root
+#    mode=0644
+#  notify: 
+#  - restart nova-services
+
+- name: ensure nova-api db is initialized
+  command: /usr/bin/nova-manage api_db sync
   notify: 
   - restart nova-services
 
@@ -37,3 +42,12 @@
   notify: 
   - restart nova-services
 
+- name: registre the cell0 database
+  command: /usr/bin/nova-manage cell_v2 map_cell0
+  notify: 
+  - restart nova-services
+
+- name: create the cell1 cell
+  command: /usr/bin/nova-manage cell_v2 create_cell --name=cell1
+  notify: 
+  - restart nova-services
