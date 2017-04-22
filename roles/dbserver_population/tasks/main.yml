@@ -63,10 +63,10 @@
 
 - name: ensure nova_api database user is present
   mysql_user: >
-    name=nova_api
+    name=nova
     host={{ item }}
     password={{ nova_db_password }}
-    priv=nova.*:ALL
+    priv=nova_api.*:ALL
   with_items:
     - '%'
     - localhost
@@ -76,10 +76,10 @@
 
 - name: ensure nova_cell0 database user is present
   mysql_user: >
-    name=nova_cell0
+    name=nova
     host={{ item }}
     password={{ nova_db_password }}
-    priv=nova.*:ALL
+    priv=nova_cell0.*:ALL
   with_items:
     - '%'
     - localhost
