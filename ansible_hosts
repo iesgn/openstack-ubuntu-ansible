@@ -5,7 +5,7 @@ controller ansible_ssh_host=192.168.1.101
 controller ansible_ssh_host=192.168.1.101
 
 [compute-nodes]
-controller ansible_ssh_host=192.168.1.102
+compute1 ansible_ssh_host=192.168.1.102
 
 [network-nodes]
 controller ansible_ssh_host=192.168.1.101
