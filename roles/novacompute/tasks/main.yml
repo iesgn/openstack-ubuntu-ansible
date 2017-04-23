@@ -1,15 +1,16 @@
 - name: verify if hypervisor support hw accel is enabled
   command: egrep '(vmx|svm)' /proc/cpuinfo
   register: result
-  
+  ignore_errors: True
+
 - name: ensure nova-compute-kvm is installed when hw accel is enabled
   apt: name=nova-compute-kvm 
-  when: result|success
+  when: result|succeeded
 
 - name: ensure nova-compute-qemu is installed when hw accel is not enabled
   apt: name=nova-compute-qemu 
-  when: result|failed
-
+  when: result|skipped
+  
 #- name: ensure python-guestfs and sysfsutils are installed
 #  apt: name={{item}} 
 #  with_items:
