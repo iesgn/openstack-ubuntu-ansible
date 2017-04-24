@@ -1,14 +1,6 @@
-- name: ensure apache and memcached packages are installed
-  apt: name={{ item }} 
-  with_items:
-    - memcached
-    - apache2
-    - libapache2-mod-wsgi
-    
 - name: ensure horizon packages are installed 
   apt: name={{ item }}  
   with_items:
-    - python-django-horizon
     - openstack-dashboard
     
 - name: ensure dashboard is configured
