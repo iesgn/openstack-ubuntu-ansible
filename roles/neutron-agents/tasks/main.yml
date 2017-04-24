@@ -11,16 +11,24 @@
   apt: name={{ item }} 
   with_items:
     - neutron-common
-    - neutron-plugin-openvswitch-agent
+    - neutron-openvswitch-agent
     - neutron-metadata-agent
     - neutron-l3-agent
     - neutron-dhcp-agent
-            
+
 - name: ensure neutron.conf is configured
   template: >
     src=../../neutronserver/templates/etc/neutron/neutron.conf
     dest=/etc/neutron/neutron.conf
     owner=neutron group=neutron mode=0660
+  notify:
+    - restart neutron agents
+
+- name: ensure openvswitch agent is configured
+  template: >
+    src=etc/neutron/plugins/ml2/openvswitch_agent.ini
+    dest=/etc/neutron/plugins/ml2/openvswitch_agent.ini
+    owner=root group=root mode=0644
   notify:
     - restart neutron agents
 
@@ -62,10 +70,5 @@
   notify:
     - restart neutron agents
 
-- name: ensure ml2 plugin is configured
-  template: >
-    src=etc/neutron/plugins/ml2/ml2_conf.ini
-    dest=/etc/neutron/plugins/ml2/ml2_conf.ini
-    owner=root group=root mode=0644
-  notify:
-    - restart neutron agents
+- name: ensure openvswitch-switch is restarted
+  service: name=openvswitch-switch state=restarted
