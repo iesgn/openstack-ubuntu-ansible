@@ -44,6 +44,14 @@
   notify:
     - restart neutron agents
 
+- name: ensure ml2 plugin is configured
+  template: >
+    src=etc/neutron/plugins/ml2/ml2_conf.ini
+    dest=/etc/neutron/plugins/ml2/ml2_conf.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
 - name: ensure br-int switch is created
   openvswitch_bridge: bridge=br-int state=present
   notify: restart neutron agents
