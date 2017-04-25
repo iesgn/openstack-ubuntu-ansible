@@ -65,7 +65,7 @@ catalog.{{ region }}.container.name = magnum
 
 
 
-catalog.{{ region }}.placement.publicURL = http://{{ controller_ip }}/placement
+catalog.{{ region }}.placement.publicURL = http://{{ controller_external_ip }}/placement
 catalog.{{ region }}.placement.adminURL = http://{{ controller_ip }}/placement
 catalog.{{ region }}.placement.internalURL = http://{{ controller_ip }}/placement
 catalog.{{ region }}.placement.name = placement
