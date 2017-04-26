@@ -14,5 +14,4 @@
 - name: Ensure cinder services are restarted
   service: name={{ item }} state=restarted
   with_items:
-  - cinder-api
   - cinder-scheduler
