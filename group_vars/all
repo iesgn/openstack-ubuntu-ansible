@@ -69,4 +69,4 @@ log_debug: False
 shared_secret: "asdasd"
 
 # # Cinder
-physical_device: /dev/sda6
+physical_device: /dev/vdb
