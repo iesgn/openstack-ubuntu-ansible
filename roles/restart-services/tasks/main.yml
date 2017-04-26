@@ -5,12 +5,10 @@
   service: name={{ item }} state=restarted
   with_items:
   - nova-api
-  - nova-conductor
   - nova-consoleauth
-  - nova-cert
   - nova-scheduler
-  - nova-compute
-
+  - nova-conductor
+  - nova-novncproxy
 - name: Ensure cinder services are restarted
   service: name={{ item }} state=restarted
   with_items:
