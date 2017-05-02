@@ -8,8 +8,6 @@ k3:
   OS_AUTH_URL: 'http://10.0.0.10:35357/v3'
   OS_IDENTITY_API_VERSION: 3 
 
-# APT Repository
-repo_fqdn: http.debian.net
 
 # Rabbit
 rabbit_user: "openstack"
