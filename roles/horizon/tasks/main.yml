@@ -47,3 +47,12 @@
   file: >-
     path=/var/lib/openstack-dashboard/secret-key/.secret_key_store
     state=absent
+
+- name: ensure django secret key is access
+  file: >-
+    path=/var/lib/openstack-dashboard/secret_key
+    owner=www-data group=www-data
+  notify: restart web services
+
+
+    
