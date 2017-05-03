@@ -7,7 +7,7 @@
 
 - name: ensure cinder sqlite is deleted
   file: dest=/var/lib/cinder/glance.sqlite state=absent
-          
+
 - name: ensure cinder.conf is configured
   template: >
     src=etc/cinder/cinder.conf
