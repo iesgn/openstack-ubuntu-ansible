@@ -187,18 +187,3 @@
   command: openstack role add --project service --user cinder admin
   
 
-- name: ensure openrc admin file is created in root home directory
-  template: >-
-    src=root/openrc
-    dest=/root/admin_openrc.sh
-    owner=root
-    group=root
-    mode=600
-
-- name: ensure openrc demo file is created in root home directory
-  template: >-
-    src=root/demo_openrc
-    dest=/root/demo_openrc.sh
-    owner=root
-    group=root
-    mode=600
