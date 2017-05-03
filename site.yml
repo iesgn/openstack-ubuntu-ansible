@@ -32,6 +32,10 @@
   roles:
     - role: keystone_population
 
+- hosts: all
+  roles: 
+    - role: openrc
+
 - hosts: storage-nodes
   roles: 
     - role: glanceserver

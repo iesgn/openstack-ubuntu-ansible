@@ -6,6 +6,7 @@
     - glance-registry
     - python-glanceclient
     - glance-common
+    - python-memcache
 
 - name: ensure glance sqlite is deleted
   file: dest=/var/lib/glance/glance.sqlite state=absent
