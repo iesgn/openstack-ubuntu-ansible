@@ -22,16 +22,6 @@
   notify: 
   - restart nova-services
 
-#- name: ensure default nova-consoleproxy file is present
-#  template: >
-#    src=etc/default/nova-consoleproxy
-#    dest=/etc/default/nova-consoleproxy
-#    owner=root
-#    group=root
-#    mode=0644
-#  notify: 
-#  - restart nova-services
-
 - name: ensure nova-api db is initialized
   command: /usr/bin/nova-manage api_db sync
   notify: 
