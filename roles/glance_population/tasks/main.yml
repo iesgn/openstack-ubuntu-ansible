@@ -1,4 +1,3 @@
-# Using os_image module (ansible >= 2.0)
 - name: ensure cirros image is downloaded
   get_url: >
     url={{ img_url }} dest=/root/Cirros.img mode=0644
@@ -17,6 +16,5 @@
     filename: /root/Cirros.img
     endpoint_type: internal
 
-# It's necessary to install shade on the controller ... a good choice?
-# http://docs.openstack.org/infra/shade/
+
 
