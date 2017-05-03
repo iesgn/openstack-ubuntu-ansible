@@ -4,7 +4,7 @@ controller ansible_ssh_host=172.22.201.135
 controller ansible_ssh_host=172.22.201.135
 
 [compute-nodes]
-compute1 ansible_ssh_host=172.22.201.30
+compute2 ansible_ssh_host=172.22.201.140
 
 [network-nodes]
 controller ansible_ssh_host=172.22.201.135
