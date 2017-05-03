@@ -23,6 +23,7 @@
     priv=glance.*:ALL
   with_items:
     - "{{ controller_ip }}"
+    - "{{ storage_ip }}"
     - 127.0.0.1
     - localhost
     - ::1
