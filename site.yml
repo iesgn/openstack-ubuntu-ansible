@@ -4,34 +4,34 @@
 #  roles:
 #    - role: common
 
+#- hosts: controller-nodes
+#  roles:
+#    - role: dbserver
+
+#- hosts: controller-nodes
+#  roles:
+#    - role: dbserver_population
+
+#- hosts: controller-nodes
+#  roles:
+#    - role: rabbitserver
+
+#- hosts: controller-nodes
+#  roles:
+#    - role: memcached
+
+
+- hosts: all
+  roles:
+    - role: openstackclient
+
 - hosts: controller-nodes
   roles:
-    - role: dbserver
+    - role: keystoneserver
 
 - hosts: controller-nodes
   roles:
-    - role: dbserver_population
-
-#- hosts: controller-nodes
-#  roles:
-#    - role: rabbitserver#
-
-#- hosts: controller-nodes
-#  roles:
-#    - role: memcached#
-#
-
-#- hosts: all
-#  roles:
-#    - role: openstackclient#
-
-#- hosts: controller-nodes
-#  roles:
-#    - role: keystoneserver#
-
-#- hosts: controller-nodes
-#  roles:
-#    - role: keystone_population#
+    - role: keystone_population
 
 #- hosts: storage-nodes
 #  roles: 

@@ -16,13 +16,6 @@
     group=keystone
     mode=0600
 
-- name: ensure service and endpoints are defined
-  template: >-
-    src=etc/keystone/default_catalog.templates
-    dest=/etc/keystone/default_catalog.templates
-    owner=root
-    group=root
-    mode=0644
 
 - name: DB sync for keystone
   shell: >
