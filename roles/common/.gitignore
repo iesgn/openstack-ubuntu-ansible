@@ -1,2 +1,3 @@
+site.yml
 ansible_hosts
 group_vars/all
