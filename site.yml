@@ -21,25 +21,25 @@
 #    - role: memcached
 
 
-- hosts: all
-  roles:
-    - role: openstackclient
+#- hosts: all
+#  roles:
+#    - role: openstackclient
 
-- hosts: controller-nodes
-  roles:
-    - role: keystoneserver
+#- hosts: controller-nodes
+#  roles:
+#    - role: keystoneserver
 
-- hosts: controller-nodes
-  roles:
-    - role: keystone_population
+#- hosts: controller-nodes
+#  roles:
+#    - role: keystone_population
 
-#- hosts: storage-nodes
-#  roles: 
-#    - role: glanceserver#
+- hosts: storage-nodes
+  roles: 
+    - role: glanceserver
 
-#- hosts: storage-nodes
-#  roles: 
-#    - role: glance_population#
+- hosts: storage-nodes
+  roles: 
+    - role: glance_population
 
 #- hosts: controller-nodes
 #  roles:
