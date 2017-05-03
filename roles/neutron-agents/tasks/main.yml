@@ -54,13 +54,6 @@
     dest=/etc/neutron/dnsmasq-neutron.conf
     owner=root group=root mode=0644
 
-# - name: ensure lbaas agent is configured
-#   template: >
-#     src=etc/neutron/lbaas_agent.ini
-#     dest=/etc/neutron/lbaas_agent.ini
-#     owner=root group=root mode=0644
-#   notify:
-#     - restart neutron agents
 
 - name: ensure metadata agent is configured
   template: >
