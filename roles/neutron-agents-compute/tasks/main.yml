@@ -11,11 +11,11 @@
     - neutron-common
     - neutron-openvswitch-agent
 
-- name: obtain service tenant id
-  shell: >-
-    keystone --os-endpoint http://{{ controller_ip }}:35357/v2.0 --os-token \
-    {{ admin_token }} tenant-get service|grep id|awk '{print $4}'
-  register: nova_admin_tenant_id
+# - name: obtain service tenant id
+#   shell: >-
+#     keystone --os-endpoint http://{{ controller_ip }}:35357/v2.0 --os-token \
+#     {{ admin_token }} tenant-get service|grep id|awk '{print $4}'
+#   register: nova_admin_tenant_id
 
 - name: ensure neutron.conf is configured
   template: >
@@ -27,7 +27,7 @@
 
 - name: ensure openvswitch plugin is configured
   template: >
-    src=etc/neutron/plugins/ml2/openvswitch_agent.ini
+    src=../../neutron-agents/templates/etc/neutron/plugins/ml2/openvswitch_agent.ini
     dest=/etc/neutron/plugins/ml2/openvswitch_agent.ini
     owner=root group=root mode=0644
   notify:
