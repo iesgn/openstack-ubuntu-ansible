@@ -27,11 +27,6 @@
   notify: 
   - restart nova-services
 
-- name: ensure nova db is initialized
-  command: /usr/bin/nova-manage db sync
-  notify: 
-  - restart nova-services
-
 - name: registre the cell0 database
   command: /usr/bin/nova-manage cell_v2 map_cell0
   notify: 
@@ -42,3 +37,9 @@
   ignore_errors: True
   notify: 
   - restart nova-services
+
+- name: ensure nova db is initialized
+  command: /usr/bin/nova-manage db sync
+  notify: 
+  - restart nova-services
+
