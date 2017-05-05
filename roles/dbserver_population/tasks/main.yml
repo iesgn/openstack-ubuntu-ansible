@@ -79,3 +79,33 @@
     - 127.0.0.1
     - localhost
     - ::1
+
+- name: ensure heat database is present
+  mysql_db: name=heat
+
+- name: ensure heat database user is present
+  mysql_user: >-
+    name=heat
+    host={{ item }}
+    password={{ heat_db_password }}
+    priv=heat.*:ALL
+  with_items:
+    - "{{ controller_ip }}"
+    - 127.0.0.1
+    - localhost
+    - ::1
+                   
+- name: ensure magnum database is present
+  mysql_db: name=magnum
+    
+- name: ensure magnum database user is present
+  mysql_user: >-
+    name=magnum
+    host={{ item }}
+    password={{ magnum_db_password }}
+    priv=magnum.*:ALL
+  with_items:
+    - "{{ controller_ip }}"
+    - 127.0.0.1
+    - localhost
+    - ::1
