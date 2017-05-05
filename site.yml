@@ -40,9 +40,9 @@
   roles: 
     - role: glanceserver
 
-- hosts: storage-nodes
-  roles: 
-    - role: glance_population
+# - hosts: storage-nodes
+#   roles: 
+#     - role: glance_population
 
 - hosts: controller-nodes
   roles:
@@ -87,3 +87,7 @@
 - hosts: controller-nodes
   roles:
     - role: restart-services
+
+- hosts: controller-nodes
+  roles:
+    - role: heatserver
