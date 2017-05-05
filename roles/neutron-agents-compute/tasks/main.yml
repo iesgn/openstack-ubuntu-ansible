@@ -27,7 +27,7 @@
 
 - name: ensure openvswitch plugin is configured
   template: >
-    src=../../neutron-agents/templates/etc/neutron/plugins/ml2/openvswitch_agent.ini
+    src=etc/neutron/plugins/ml2/openvswitch_agent.ini
     dest=/etc/neutron/plugins/ml2/openvswitch_agent.ini
     owner=root group=root mode=0644
   notify:
