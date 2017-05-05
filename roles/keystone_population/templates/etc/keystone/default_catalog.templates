@@ -38,3 +38,17 @@ catalog.{{ region }}.placement.adminURL = http://{{ controller_ip }}:8778
 catalog.{{ region }}.placement.internalURL = http://{{ controller_ip }}:8778
 catalog.{{ region }}.placement.name = placement
 
+catalog.{{ region }}.orchestration.publicURL = http://{{ controller_external_ip }}:8004/v1/$(tenant_id)s
+catalog.{{ region }}.orchestration.adminURL = http://{{ controller_ip }}:8004/v1/$(tenant_id)s
+catalog.{{ region }}.orchestration.internalURL = http://{{ controller_ip }}:8004/v1/$(tenant_id)s
+catalog.{{ region }}.orchestration.name = heat
+
+catalog.{{ region }}.cloudformation.publicURL = http://{{ controller_external_ip }}:8000/v1
+catalog.{{ region }}.cloudformation.adminURL = http://{{ controller_ip }}:8000/v1
+catalog.{{ region }}.cloudformation.internalURL = http://{{ controller_ip }}:8000/v1
+catalog.{{ region }}.cloudformation.name = heat-cfn
+
+catalog.{{ region }}.container.publicURL = http://{{ controller_external_ip }}:9511/v1
+catalog.{{ region }}.container.adminURL = http://{{ controller_ip }}:9511/v1
+catalog.{{ region }}.container.internalURL = http://{{ controller_ip }}:9511/v1
+catalog.{{ region }}.container.name = magnum
