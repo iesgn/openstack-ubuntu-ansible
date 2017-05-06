@@ -187,6 +187,21 @@
   command: openstack role add --project service --user cinder admin
   
 # Heat
+- name: verify if heat user has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user show heat
+  register: result
+  ignore_errors: True
+
+- name: ensure heat user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default heat --password {{ heat_identity_password }}
+  when: result|failed
+
+- name: ensure admin role is added to heat user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user heat admin
+
 - name: verify if heat domain has been created
   environment: '{{k3}}'
   command: /usr/bin/openstack domain show heat
