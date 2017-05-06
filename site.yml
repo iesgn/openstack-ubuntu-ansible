@@ -91,3 +91,7 @@
 - hosts: controller-nodes
   roles:
     - role: heatserver
+
+- hosts: controller-nodes
+  roles:
+    - role: magnumserver

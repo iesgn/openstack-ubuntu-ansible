@@ -48,7 +48,7 @@ catalog.{{ region }}.cloudformation.adminURL = http://{{ controller_ip }}:8000/v
 catalog.{{ region }}.cloudformation.internalURL = http://{{ controller_ip }}:8000/v1
 catalog.{{ region }}.cloudformation.name = heat-cfn
 
-catalog.{{ region }}.container.publicURL = http://{{ controller_external_ip }}:9511/v1
-catalog.{{ region }}.container.adminURL = http://{{ controller_ip }}:9511/v1
-catalog.{{ region }}.container.internalURL = http://{{ controller_ip }}:9511/v1
-catalog.{{ region }}.container.name = magnum
+catalog.{{ region }}.container-infra.publicURL = http://{{ controller_external_ip }}:9511/v1
+catalog.{{ region }}.container-infra.adminURL = http://{{ controller_ip }}:9511/v1
+catalog.{{ region }}.container-infra.internalURL = http://{{ controller_ip }}:9511/v1
+catalog.{{ region }}.container-infra.name = magnum

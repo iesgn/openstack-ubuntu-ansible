@@ -269,3 +269,30 @@
 - name: ensure admin role is added to magnum user
   environment: '{{k3}}'
   command: openstack role add --project service --user magnum admin
+
+- name: verify if magnum domain has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack domain show magnum
+  register: result
+  ignore_errors: True
+
+- name: ensure magnum domain is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack domain create --description "Owns users and projects created by magnum" magnum
+  when: result|failed
+  
+- name: verify if magnum_domain_admin user has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user show magnum_domain_admin
+  register: result
+  ignore_errors: True
+
+- name: ensure magnum_domain_admin user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain magnum --password {{ magnum_identity_password }} magnum_domain_admin
+  when: result|failed
+  
+- name: ensure admin role is added to magnum user in the magnum domain
+  environment: '{{k3}}'
+  command: openstack role add --domain magnum --user-domain magnum --user magnum_domain_admin admin
+
