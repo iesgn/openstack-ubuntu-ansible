@@ -254,6 +254,37 @@
   command: /usr/bin/openstack role create heat_stack_user
   when: result|failed
 
+# Barbican
+- name: verify if barbican user has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user show barbican
+  register: result
+  ignore_errors: True
+
+- name: ensure barbican user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default barbican --password {{ barbican_identity_password }}
+  when: result|failed
+
+- name: ensure admin role is added to barbican user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user barbican admin
+
+- name: verify if creator role has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role show creator
+  register: result
+  ignore_errors: True
+
+- name: ensure creator role is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role create creator
+  when: result|failed
+
+- name: ensure creator role is added to barbican user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user barbican creator
+
 # Magnum
 - name: verify is magnum user has been created
   environment: '{{k3}}'

@@ -52,3 +52,8 @@ catalog.{{ region }}.container-infra.publicURL = http://{{ controller_external_i
 catalog.{{ region }}.container-infra.adminURL = http://{{ controller_ip }}:9511/v1
 catalog.{{ region }}.container-infra.internalURL = http://{{ controller_ip }}:9511/v1
 catalog.{{ region }}.container-infra.name = magnum
+
+catalog.{{ region }}.key-manager.publicURL = http://{{ controller_external_ip }}:9311
+catalog.{{ region }}.key-manager.adminURL = http://{{ controller_ip }}:9311
+catalog.{{ region }}.key-manager.internalURL = http://{{ controller_ip }}:9311
+catalog.{{ region }}.key-manager.name = barbican

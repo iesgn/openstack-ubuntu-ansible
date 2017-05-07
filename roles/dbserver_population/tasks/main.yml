@@ -95,6 +95,21 @@
     - localhost
     - ::1
                    
+- name: ensure barbican database is present
+  mysql_db: name=barbican
+
+- name: ensure barbican database user is present
+  mysql_user: >-
+    name=barbican
+    host={{ item }}
+    password={{ barbican_db_password }}
+    priv=barbican.*:ALL
+  with_items:
+    - "{{ controller_ip }}"
+    - 127.0.0.1
+    - localhost
+    - ::1
+                   
 - name: ensure magnum database is present
   mysql_db: name=magnum
     

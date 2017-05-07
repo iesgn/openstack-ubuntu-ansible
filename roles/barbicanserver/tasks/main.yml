@@ -1,0 +1,37 @@
+- name: ensure barbican packages are installed
+  apt: name={{ item }}
+  with_items:
+    - barbican-api
+    - barbican-keystone-listener
+    - barbican-worker
+
+- name: ensure barbican sqlite is deleted
+  file: dest=/var/lib/barbican/barbican.sqlite state=absent
+
+- name: ensure barbican.conf file is up to date
+  template: >
+    src=etc/barbican/barbican.conf
+    dest=/etc/barbican/barbican.conf
+    owner=barbican
+    group=barbican
+    mode=0644
+  notify:
+  - restart apache
+
+- name: ensure barbican-api-paste.ini file is up to date
+  template: >
+    src=etc/barbican/barbican-api-paste.ini
+    dest=/etc/barbican/barbican-api-paste.ini
+    owner=barbican
+    group=barbican
+    mode=0644
+  notify:
+  - restart apache
+
+- name: ensure barbican db is initialized
+  command: /usr/bin/barbican-manage db upgrade
+  become: true
+  become_user: barbican
+  notify:
+    - restart apache
+          
