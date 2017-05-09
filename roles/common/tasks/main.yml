@@ -8,8 +8,8 @@
   apt_repository: >-
     repo="deb http://ubuntu-cloud.archive.canonical.com/ubuntu xenial-updates/ocata main"
   
-- name: Ensure system is upgraded (It can take a long time)
-  apt: upgrade=yes update_cache=yes
+#- name: Ensure system is upgraded (It can take a long time)
+#  apt: upgrade=yes update_cache=yes
 
 - name: Ensure ntp is installed
   apt: name=ntp 

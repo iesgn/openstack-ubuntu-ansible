@@ -1,0 +1,30 @@
+---
+
+- hosts: all
+  roles:
+    - role: common
+
+- hosts: all
+  roles:
+    - role: openstackclient
+
+- hosts: all
+  roles: 
+    - role: openrc
+
+- hosts: compute-nodes
+  roles:
+    - role: novacompute
+
+- hosts: controller-nodes
+  roles:
+    - role: nova_init
+
+- hosts: compute-nodes
+  roles:
+    - role: neutron-agents-compute
+
+- hosts: controller-nodes
+  roles:
+    - role: restart-services
+

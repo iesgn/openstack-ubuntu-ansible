@@ -5,7 +5,7 @@ k3:
   OS_PROJECT_NAME: 'admin'
   OS_USER_DOMAIN_NAME: 'Default'
   OS_PROJECT_DOMAIN_NAME: 'Default'
-  OS_AUTH_URL: 'http://10.0.0.12:35357/v3'
+  OS_AUTH_URL: 'http://10.0.0.210:35357/v3'
   OS_IDENTITY_API_VERSION: 3 
 
 
@@ -14,13 +14,13 @@ rabbit_user: "openstack"
 rabbit_password: "asdasd"
 
 # # IPs
-controller_ip: 192.168.0.8
-storage_ip: 192.168.0.8
-network_node_ip: 192.168.0.8
+controller_ip: 192.168.0.210
+storage_ip: 192.168.0.210
+network_node_ip: 192.168.0.210
 network_node_netmask: 255.255.255.0
-controller_external_ip: 10.0.0.12
-storage_external_ip: 10.0.0.12
-network_node_external_ip: 10.0.0.12
+controller_external_ip: 10.0.0.210
+storage_external_ip: 10.0.0.210
+network_node_external_ip: 10.0.0.210
 network_node_external_netmask: 255.255.255.0
 network_node_external_CIDR: 24
 external_gateway: 10.0.0.1
