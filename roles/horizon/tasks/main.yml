@@ -10,6 +10,13 @@
     owner=root group=root mode=0644
   notify: restart web services
 
+- name: ensure default horizon theme is used
+  lineinfile: 
+    path: /etc/openstack-dashboard/local_settings.py
+    regexp: '^DEFAULT_THEME'
+    line: "DEFAULT_THEME = 'default'"
+  notify: restart web services
+    
 # - name: ensure default virtualhost is disabled
 #   command: a2dissite {{ item }}
 #   with_items:
