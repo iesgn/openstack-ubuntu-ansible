@@ -10,6 +10,7 @@
     - neutron-l3-agent
     - neutron-dhcp-agent
     - neutron-metadata-agent
+    - neutron-lbaasv2-agent
     
 - name: restart openvswitch services
   service: name=openvswitch-switch state=restarted

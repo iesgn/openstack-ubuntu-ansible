@@ -15,6 +15,7 @@
     - neutron-metadata-agent
     - neutron-l3-agent
     - neutron-dhcp-agent
+    - neutron-lbaasv2-agent
 
 - name: ensure neutron.conf is configured
   template: >
@@ -63,5 +64,16 @@
   notify:
     - restart neutron agents
 
+- name: ensure LBaaS v2 agent is configured
+  template: >
+    src=etc/neutron/lbaas_agent.ini
+    dest=/etc/neutron/lbaas_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure neutron-lbaas-dabatase is migrated
+  command: neutron-db-manage --subproject neutron-lbaas upgrade head
+    
 - name: ensure openvswitch-switch is restarted
   service: name=openvswitch-switch state=restarted
