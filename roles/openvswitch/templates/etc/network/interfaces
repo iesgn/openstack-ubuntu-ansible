@@ -10,6 +10,7 @@ iface {{ int_net_nic }} inet static
         address {{ network_node_ip }}
         netmask {{ network_node_netmask }}
 
+auto br-ex
 allow-ovs br-ex
 iface br-ex inet static
         address {{ network_node_external_ip }}
