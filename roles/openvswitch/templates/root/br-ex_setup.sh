@@ -8,10 +8,10 @@
 
 if [ $? -ne 0 ]; then
     /sbin/ip route del default
-    /sbin/ip addr del {{ network_node_external_ip }}/{{ network_node_external_CIDR }} dev {{ ext_net_nic }}
+    /sbin/ip addr del {{ network_node_external_ip }}/{{ network_node_external_CIDR }} dev {{ ext_nic }}
     /sbin/ip link set br-ex up
-    /usr/bin/ovs-vsctl add-port br-ex {{ ext_net_nic }}
-    /sbin/ip link set {{ ext_net_nic }} promisc on
+    /usr/bin/ovs-vsctl add-port br-ex {{ ext_nic }}
+    /sbin/ip link set {{ ext_nic }} promisc on
     /sbin/ip addr add {{ network_node_external_ip }}/{{ network_node_external_CIDR }} dev br-ex
     /sbin/ip route add default via {{ external_gateway }}
 fi

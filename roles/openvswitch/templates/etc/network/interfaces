@@ -5,8 +5,8 @@
 auto lo
 iface lo inet loopback
 
-auto {{ int_net_nic }}
-iface {{ int_net_nic }} inet static
+auto {{ int_nic }}
+iface {{ int_nic }} inet static
         address {{ network_node_ip }}
         netmask {{ network_node_netmask }}
 
@@ -17,10 +17,10 @@ iface br-ex inet static
         netmask {{ network_node_external_netmask }}
         gateway {{ external_gateway }}
 	ovs_type OVSBridge
-	ovs_ports {{ ext_net_nic }}
+	ovs_ports {{ ext_nic }}
 
-allow-br-ex {{ ext_net_nic }}
-iface {{ ext_net_nic }} inet manual
+allow-br-ex {{ ext_nic }}
+iface {{ ext_nic }} inet manual
         ovs_bridge br-ex
         ovs_type OVSPort
         up ip link set $IFACE promisc on

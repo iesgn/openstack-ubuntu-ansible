@@ -1,8 +1,11 @@
 [controller-nodes]
-controller ansible_ssh_host=172.22.200.27
+controller ansible_ssh_host=192.168.221.101
+
 [storage-nodes]
-controller ansible_ssh_host=172.22.200.27
+controller ansible_ssh_host=192.168.221.101
+
 [compute-nodes]
-compute2 ansible_ssh_host=172.22.200.62
+controller ansible_ssh_host=192.168.221.101
+
 [network-nodes]
-controller ansible_ssh_host=172.22.200.27
+controller ansible_ssh_host=192.168.221.101
