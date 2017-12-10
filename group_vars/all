@@ -1,0 +1,30 @@
+# KEYSTONE_3
+k3:
+  OS_USERNAME: 'admin'
+  OS_PASSWORD: 'asdasd'
+  OS_PROJECT_NAME: 'admin'
+  OS_USER_DOMAIN_NAME: 'Default'
+  OS_PROJECT_DOMAIN_NAME: 'Default'
+  OS_AUTH_URL: 'http://192.168.221.101:35357/v3'
+  OS_IDENTITY_API_VERSION: 3 
+
+# Rabbit
+rabbit_user: "openstack"
+rabbit_password: "asdasd"
+
+# # IPs
+controller_ip: 192.168.201.10
+storage_ip: 192.168.201.10
+storage_external_ip: 192.168.200.10
+
+# # MySQL passwords
+root_db_password: "asdasd"
+keystone_db_password: "asdasd"
+glance_db_password: "asdasd"
+cinder_db_password: "asdasd"
+nova_db_password: "asdasd"
+neutron_db_password: "asdasd"
+
+# # OpenStack variables
+region: RegionOne
+admin_pass: "asdasd"

@@ -1,0 +1,46 @@
+- name: ensure add etcd group
+  group:
+    name: etcd
+    state: present
+    system: yes
+
+- name: ensure add etcd user
+  user:
+    name: etcd
+    shell: /bin/false
+    groups: etcd
+    state: present
+    system: yes
+    home: /var/lib/etcd
+
+- name: Transfer the script for installing etcd
+  copy: 
+    src=files/script.sh
+    dest=/root/script.sh
+    mode=0777
+
+- name: Execute the script for installing etcd
+  command: sh /root/script.sh
+
+- name: Create config directory for etcd
+  file:
+    path: /etc/etcd
+    state: directory
+    mode: 0755
+
+- name: Ensure etcd good config
+  template: >
+    src=etc/etcd/etcd.conf.yml
+    dest=/etc/etcd/etcd.conf.yml
+    owner=root 
+    group=root 
+    mode=0644
+
+- name: Ensure etcd good config systemctl
+  template: >
+    src=lib/systemd/system/etcd.service
+    dest=/lib/systemd/system/etcd.service
+    owner=root 
+    group=root 
+    mode=0644
+  notify: restart etcd

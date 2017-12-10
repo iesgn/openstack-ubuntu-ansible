@@ -1,0 +1,97 @@
+---
+
+- hosts: all
+  roles:
+    - role: common
+
+- hosts: controller-nodes
+  roles:
+    - role: dbserver
+
+- hosts: controller-nodes
+  roles:
+    - role: dbserver_population
+
+- hosts: controller-nodes
+  roles:
+    - role: rabbitserver
+
+- hosts: controller-nodes
+  roles:
+    - role: memcached
+
+- hosts: all
+  roles:
+    - role: openstackclient
+
+- hosts: controller-nodes
+  roles:
+    - role: keystoneserver
+
+- hosts: controller-nodes
+  roles:
+    - role: keystone_population
+
+- hosts: all
+  roles: 
+    - role: openrc
+
+- hosts: storage-nodes
+  roles: 
+    - role: glanceserver
+
+# - hosts: storage-nodes
+#   roles: 
+#     - role: glance_population
+
+- hosts: controller-nodes
+  roles:
+    - role: novaserver
+
+- hosts: compute-nodes
+  roles:
+    - role: novacompute
+
+- hosts: controller-nodes
+  roles:
+    - role: nova_init
+
+- hosts: controller-nodes
+  roles:
+   - role: neutronserver
+
+- hosts: network-nodes
+  roles:
+    - role: neutron-agents
+
+- hosts: network-nodes
+  roles:
+    - role: openvswitch
+
+- hosts: compute-nodes
+  roles:
+    - role: neutron-agents-compute
+
+- hosts: controller-nodes
+  roles:
+    - role: horizon
+
+- hosts: controller-nodes
+  roles:
+    - role: cinderserver
+
+- hosts: storage-nodes
+  roles:
+    - role: cindervolume
+
+- hosts: controller-nodes
+  roles:
+    - role: restart-services
+
+- hosts: controller-nodes
+  roles:
+    - role: heatserver
+
+- hosts: controller-nodes
+  roles:
+    - role: magnumserver

@@ -1,0 +1,14 @@
+- name: Ensure memcached is installed
+  apt: pkg={{ item }} 
+  with_items:
+    - memcached
+    - python-memcache
+
+- name: Ensure memcached good config
+  template: >
+    src=etc/memcached.conf
+    dest=/etc/memcached.conf
+    owner=root 
+    group=root 
+    mode=0644
+  notify: restart memcached

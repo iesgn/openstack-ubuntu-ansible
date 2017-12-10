@@ -1,0 +1,7 @@
+
+---
+# handlers for the common tasks
+
+
+- name: restart chrony
+  service: name=chrony state=restarted

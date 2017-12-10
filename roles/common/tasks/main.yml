@@ -1,0 +1,12 @@
+- name: ensure software-properties-common is installed
+  apt: name=software-properties-common state=latest
+
+- name: Enable the OpenStack repository
+  shell: add-apt-repository cloud-archive:pike
+
+#- name: Ensure system is upgraded (It can take a long time)
+#  apt: upgrade=yes update_cache=yes
+
+- name: Ensure chrony is installed
+  apt: name=chrony 
+  notify: restart chrony
