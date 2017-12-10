@@ -5,7 +5,7 @@ k3:
   OS_PROJECT_NAME: 'admin'
   OS_USER_DOMAIN_NAME: 'Default'
   OS_PROJECT_DOMAIN_NAME: 'Default'
-  OS_AUTH_URL: 'http://192.168.221.101:35357/v3'
+  OS_AUTH_URL: 'http://192.168.201.10:35357/v3'
   OS_IDENTITY_API_VERSION: 3 
 
 # Rabbit
@@ -25,6 +25,10 @@ cinder_db_password: "asdasd"
 nova_db_password: "asdasd"
 neutron_db_password: "asdasd"
 
+# # Keystone identity passwords:
+glance_identity_password: "glance"
+
 # # OpenStack variables
 region: RegionOne
 admin_pass: "asdasd"
+demo_pass: "asdasd"

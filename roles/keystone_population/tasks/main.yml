@@ -76,83 +76,97 @@
  
 #endpoints glance
 
+- name: verify if glance service has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack service show glance
+  register: result
+  ignore_errors: True
+
+- name: ensecue glance service is created
+  environment: '{{k3}}'
+  command: openstack service create --name glance --description "OpenStack Image" image
+  when: result|failed
+
 - name: ensure glance endpoint public is created
   environment: '{{k3}}'
   command: openstack endpoint create --region {{region}} image public http://{{ storage_external_ip }}:9292
+  when: result|failed
 
 - name: ensure glance endpoint internal is created
   environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} image intenal http://{{ storage_ip }}:9292
+  command: openstack endpoint create --region {{region}} image internal http://{{ storage_ip }}:9292
+  when: result|failed
 
 - name: ensure glance endpoint admin is created
   environment: '{{k3}}'
   command: openstack endpoint create --region {{region}} image admin http://{{ storage_ip }}:9292
-
-
-# Nova
-- name: verify if nova user has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user show nova
-  register: result
-  ignore_errors: True
-
-- name: ensure nova user is created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain default nova --password {{ nova_identity_password }}
   when: result|failed
 
-- name: ensure admin role is added to nova user
-  environment: '{{k3}}'
-  command: openstack role add --project service --user nova admin
 
-# Placement
+## Nova
+#- name: verify if nova user has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user show nova
+#  register: result
+#  ignore_errors: True#
 
-- name: verify if Placement user has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user show placement
-  register: result
-  ignore_errors: True
+#- name: ensure nova user is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user create --domain default nova --password {{ nova_identity_password }}
+#  when: result|failed#
 
-- name: ensure placement user is created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identity_password }}
-  when: result|failed
+#- name: ensure admin role is added to nova user
+#  environment: '{{k3}}'
+#  command: openstack role add --project service --user nova admin#
 
-- name: ensure admin role is added to placement user
-  environment: '{{k3}}'
-  command: openstack role add --project service --user placement admin
+## Placement#
 
-# Neutron
-- name: verify if neutron user has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user show neutron
-  register: result
-  ignore_errors: True
+#- name: verify if Placement user has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user show placement
+#  register: result
+#  ignore_errors: True#
 
-- name: ensure neutron user is created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain default neutron --password {{ neutron_identity_password }}
-  when: result|failed
+#- name: ensure placement user is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identity_password }}
+#  when: result|failed#
 
-- name: ensure admin role is added to neutron user
-  environment: '{{k3}}'
-  command: openstack role add --project service --user neutron admin
-  
-# Cinder
-- name: verify if cinder user has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user show cinder
-  register: result
-  ignore_errors: True
+#- name: ensure admin role is added to placement user
+#  environment: '{{k3}}'
+#  command: openstack role add --project service --user placement admin#
 
-- name: ensure cinder user is created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain default cinder --password {{ cinder_identity_password }}
-  when: result|failed
+## Neutron
+#- name: verify if neutron user has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user show neutron
+#  register: result
+#  ignore_errors: True#
 
-- name: ensure admin role is added to cinder user
-  environment: '{{k3}}'
-  command: openstack role add --project service --user cinder admin
+#- name: ensure neutron user is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user create --domain default neutron --password {{ neutron_identity_password }}
+#  when: result|failed#
+
+#- name: ensure admin role is added to neutron user
+#  environment: '{{k3}}'
+#  command: openstack role add --project service --user neutron admin
+#  
+## Cinder
+#- name: verify if cinder user has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user show cinder
+#  register: result
+#  ignore_errors: True#
+
+#- name: ensure cinder user is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user create --domain default cinder --password {{ cinder_identity_password }}
+#  when: result|failed#
+
+#- name: ensure admin role is added to cinder user
+#  environment: '{{k3}}'
+#  command: openstack role add --project service --user cinder admin
   
 # Heat
 #- name: verify if heat user has been created
