@@ -8,9 +8,9 @@
 #  roles:
 #    - role: dbserver
 
-- hosts: controller-nodes
-  roles:
-    - role: dbserver_population
+#- hosts: controller-nodes
+#  roles:
+#    - role: dbserver_population
 
 #- hosts: controller-nodes
 #  roles:
@@ -48,6 +48,14 @@
 #  roles: 
 #    - role: glance_population
 
+#- hosts: controller-nodes
+#  roles:
+#    - role: novaserver
+
+- hosts: compute-nodes
+  roles:
+    - role: novacompute
+
 - hosts: controller-nodes
   roles:
-    - role: novaserver
+    - role: nova_init
