@@ -1,0 +1,28 @@
+- name: ensure glance is installed
+  apt: name={{ item }} 
+  with_items:
+    - glance
+- name: ensure glance-api.conf file is up to date
+  template: >
+    src=etc/glance/glance-api.conf
+    dest=/etc/glance/glance-api.conf
+    owner=glance
+    group=glance
+    mode=0600
+  notify:
+  - restart glance-services
+
+- name: ensure glance-registry.conf file is up to date
+  template: >
+    src=etc/glance/glance-registry.conf
+    dest=/etc/glance/glance-registry.conf
+    owner=glance
+    group=glance
+    mode=0600
+  notify:
+  - restart glance-services
+
+- name: ensure glance db is initialized
+  command: /usr/bin/glance-manage db_sync
+  notify:
+  - restart glance-services
