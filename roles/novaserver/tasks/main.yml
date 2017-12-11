@@ -1,0 +1,46 @@
+- name: ensure nova packages are installed
+  apt: name={{ item }} 
+  with_items:
+    - nova-api
+    - nova-conductor
+    - nova-consoleauth
+    - nova-scheduler
+    - nova-novncproxy
+    - nova-placement-api
+
+- name: ensure nova sqlite is deleted
+  file: dest=/var/lib/nova/nova.sqlite state=absent
+
+- name: ensure nova_api sqlite is deleted
+  file: dest=/var/lib/nova/nova_api.sqlite state=absent
+    
+- name: ensure nova.conf file is present
+  template: >
+    src=etc/nova/nova.conf
+    dest=/etc/nova/nova.conf
+    owner=nova
+    group=nova
+    mode=0660
+  notify: 
+  - restart nova-services
+
+- name: ensure nova-api db is initialized
+  command: /usr/bin/nova-manage api_db sync
+  notify: 
+  - restart nova-services
+
+- name: registre the cell0 database
+  command: /usr/bin/nova-manage cell_v2 map_cell0 nova
+  notify: 
+  - restart nova-services
+
+- name: create the cell1 cell
+  command: /usr/bin/nova-manage cell_v2 create_cell --name=cell1 nova
+  ignore_errors: True
+  notify: 
+  - restart nova-services
+
+- name: ensure nova db is initialized
+  command: /usr/bin/nova-manage db sync
+  notify: 
+  - restart nova-services
