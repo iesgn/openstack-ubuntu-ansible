@@ -31,7 +31,19 @@
 #- hosts: controller-nodes
 #  roles:
 #    - role: keystoneserver
+#
+#- hosts: controller-nodes
+#  roles:
+#    - role: keystone_population
 
-- hosts: controller-nodes
-  roles:
-    - role: keystone_population
+#- hosts: all
+#  roles: 
+#    - role: openrc
+
+#- hosts: storage-nodes
+#  roles: 
+#    - role: glanceserver
+
+- hosts: storage-nodes
+  roles: 
+    - role: glance_population
