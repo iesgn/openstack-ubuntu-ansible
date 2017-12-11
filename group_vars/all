@@ -15,6 +15,7 @@ rabbit_password: "asdasd"
 # # IPs
 controller_ip: 192.168.201.10
 storage_ip: 192.168.201.10
+controller_external_ip: 192.168.200.10
 storage_external_ip: 192.168.200.10
 
 # # MySQL passwords
@@ -27,6 +28,8 @@ neutron_db_password: "asdasd"
 
 # # Keystone identity passwords:
 glance_identity_password: "glance"
+nova_identity_password: "nova"
+placement_identity_password: "placement"
 
 # # OpenStack variables
 region: RegionOne

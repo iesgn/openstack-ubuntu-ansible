@@ -75,7 +75,7 @@
 - name: ensure admin role is added to glance user
   environment: '{{k3}}'
   command: openstack role add --project service --user glance admin
-
+  when: result|failed
 
 - name: ensecue glance service is created
   environment: '{{k3}}'
@@ -99,37 +99,84 @@
 
 
 ## Nova
-#- name: verify if nova user has been created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user show nova
-#  register: result
-#  ignore_errors: True#
 
-#- name: ensure nova user is created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user create --domain default nova --password {{ nova_identity_password }}
-#  when: result|failed#
+- name: verify if nova service has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack service show nova
+  register: result
+  ignore_errors: True
 
-#- name: ensure admin role is added to nova user
-#  environment: '{{k3}}'
-#  command: openstack role add --project service --user nova admin#
+- name: ensure nova user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default nova --password {{ nova_identity_password }}
+  when: result|failed
+
+- name: ensure admin role is added to nova user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user nova admin
+  when: result|failed
+
+- name: ensecue nova service is created
+  environment: '{{k3}}'
+  command: openstack service create --name nova --description "OpenStack Compute" compute
+  when: result|failed
+
+- name: ensure nova endpoint public is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} compute public http://{{ controller_external_ip }}:8774/v2.1
+  when: result|failed
+
+- name: ensure nova endpoint internal is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} compute internal http://{{ controller_ip }}:8774/v2.1
+  when: result|failed
+
+- name: ensure nova endpoint admin is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} compute admin http://{{ controller_ip }}:8774/v2.1
+  when: result|failed
+
 
 ## Placement#
 
-#- name: verify if Placement user has been created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user show placement
-#  register: result
-#  ignore_errors: True#
+- name: verify if placement service has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack service show placement
+  register: result
+  ignore_errors: True
 
-#- name: ensure placement user is created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identity_password }}
-#  when: result|failed#
 
-#- name: ensure admin role is added to placement user
-#  environment: '{{k3}}'
-#  command: openstack role add --project service --user placement admin#
+- name: ensure placement user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default placement --password {{ placement_identity_password }}
+  when: result|failed
+
+- name: ensure admin role is added to placement user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user placement admin
+  when: result|failed
+
+- name: ensecue placement service is created
+  environment: '{{k3}}'
+  command: openstack service create --name placement --description "placement API" placement
+  when: result|failed
+
+
+- name: ensure placement endpoint public is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} placement public http://{{ controller_external_ip }}:8778
+  when: result|failed
+
+- name: ensure placement endpoint internal is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} placement internal http://{{ controller_ip }}:8778
+  when: result|failed
+
+- name: ensure placement endpoint admin is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} placement admin http://{{ controller_ip }}:8778
+  when: result|failed
+
 
 ## Neutron
 #- name: verify if neutron user has been created
