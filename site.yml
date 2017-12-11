@@ -2,19 +2,19 @@
 
 #- hosts: all
 #  roles:
-#    - role: common#
+#    - role: common
 
 #- hosts: controller-nodes
 #  roles:
-#    - role: dbserver#
+#    - role: dbserver
+
+- hosts: controller-nodes
+  roles:
+    - role: dbserver_population
 
 #- hosts: controller-nodes
 #  roles:
-#    - role: dbserver_population#
-
-#- hosts: controller-nodes
-#  roles:
-#    - role: rabbitserver#
+#    - role: rabbitserver
 
 #- hosts: controller-nodes
 #  roles:
@@ -26,7 +26,7 @@
 
 #- hosts: controller-nodes
 #  roles:
-#    - role: etcd#
+#    - role: etcd
 
 #- hosts: controller-nodes
 #  roles:

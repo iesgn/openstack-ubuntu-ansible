@@ -45,12 +45,20 @@
 - name: ensure nova database is present
   mysql_db: name=nova
 
+# create nova-api, nova_cell0
+
+- name: ensure nova_api database is present
+  mysql_db: name=nova_api
+
+- name: ensure nova_cell0 database is present
+  mysql_db: name=nova_cell0
+
 - name: ensure nova database user is present
   mysql_user: >
     name=nova
     host={{ item }}
     password={{ nova_db_password }}
-    priv=nova.*:ALL
+    priv=nova.*:ALL/nova_api.*:ALL/nova_cell0.*:ALL
   with_items:
     - '%'
     - localhost

@@ -30,12 +30,12 @@
   - restart nova-services
 
 - name: registre the cell0 database
-  command: /usr/bin/nova-manage cell_v2 map_cell0 nova
+  command: /usr/bin/nova-manage cell_v2 map_cell0 
   notify: 
   - restart nova-services
 
 - name: create the cell1 cell
-  command: /usr/bin/nova-manage cell_v2 create_cell --name=cell1 nova
+  command: /usr/bin/nova-manage cell_v2 create_cell --name=cell1 --verbose
   ignore_errors: True
   notify: 
   - restart nova-services
