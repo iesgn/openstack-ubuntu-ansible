@@ -30,6 +30,7 @@ neutron_db_password: "asdasd"
 glance_identity_password: "glance"
 nova_identity_password: "nova"
 placement_identity_password: "placement"
+neutron_identity_password: "neutron"
 
 # # OpenStack variables
 region: RegionOne

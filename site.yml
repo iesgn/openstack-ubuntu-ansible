@@ -32,9 +32,9 @@
 #  roles:
 #    - role: keystoneserver
 #
-#- hosts: controller-nodes
-#  roles:
-#    - role: keystone_population
+- hosts: controller-nodes
+  roles:
+    - role: keystone_population
 
 #- hosts: all
 #  roles: 
@@ -52,10 +52,10 @@
 #  roles:
 #    - role: novaserver
 
-- hosts: compute-nodes
-  roles:
-    - role: novacompute
+#- hosts: compute-nodes
+#  roles:
+#    - role: novacompute
 
-- hosts: controller-nodes
-  roles:
-    - role: nova_init
+#- hosts: controller-nodes
+#  roles:
+#    - role: nova_init

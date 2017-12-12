@@ -179,20 +179,45 @@
 
 
 ## Neutron
-#- name: verify if neutron user has been created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user show neutron
-#  register: result
-#  ignore_errors: True#
 
-#- name: ensure neutron user is created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack user create --domain default neutron --password {{ neutron_identity_password }}
-#  when: result|failed#
 
-#- name: ensure admin role is added to neutron user
-#  environment: '{{k3}}'
-#  command: openstack role add --project service --user neutron admin
+- name: verify if neutron service has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack service show neutron
+  register: result
+  ignore_errors: True
+
+- name: ensure neutron user is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack user create --domain default neutron --password {{ neutron_identity_password }}
+  when: result|failed
+
+- name: ensure admin role is added to neutron user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user neutron admin
+  when: result|failed
+
+- name: ensecue neutron service is created
+  environment: '{{k3}}'
+  command: openstack service create --name neutron --description "OpenStack Networking" placement
+  when: result|failed
+
+- name: ensure neutron endpoint public is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} network public http://{{ controller_external_ip }}:9696
+  when: result|failed
+
+- name: ensure neutron endpoint internal is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} network internal http://{{ controller_ip }}:9696
+  when: result|failed
+
+- name: ensure neutron endpoint admin is created
+  environment: '{{k3}}'
+  command: openstack endpoint create --region {{region}} network admin http://{{ controller_ip }}:9696
+  when: result|failed
+
+
 #  
 ## Cinder
 #- name: verify if cinder user has been created
