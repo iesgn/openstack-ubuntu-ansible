@@ -199,7 +199,7 @@
 
 - name: ensecue neutron service is created
   environment: '{{k3}}'
-  command: openstack service create --name neutron --description "OpenStack Networking" placement
+  command: openstack service create --name neutron --description "OpenStack Networking" network
   when: result|failed
 
 - name: ensure neutron endpoint public is created
