@@ -64,6 +64,10 @@
 #  roles:
 #    - role: neutronserver
 
+#- hosts: network-nodes
+#  roles:
+#    - role: neutron-agents
+
 - hosts: network-nodes
   roles:
-    - role: neutron-agents
+  - role: openvswitch

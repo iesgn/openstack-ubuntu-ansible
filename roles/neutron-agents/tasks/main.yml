@@ -16,3 +16,64 @@
     - neutron-l3-agent
     - neutron-dhcp-agent
     - neutron-lbaasv2-agent
+
+- name: ensure neutron.conf is configured
+  template: >
+    src=../../neutronserver/templates/etc/neutron/neutron.conf
+    dest=/etc/neutron/neutron.conf
+    owner=neutron group=neutron mode=0660
+  notify:
+    - restart neutron agents
+
+- name: ensure openvswitch agent is configured
+  template: >
+    src=etc/neutron/plugins/ml2/openvswitch_agent.ini
+    dest=/etc/neutron/plugins/ml2/openvswitch_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure l3 agent is configured
+  template: >
+    src=etc/neutron/l3_agent.ini
+    dest=/etc/neutron/l3_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure DHCP agent is configured
+  template: >
+    src=etc/neutron/dhcp_agent.ini
+    dest=/etc/neutron/dhcp_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure DNSmasq is configured to use MTU=1454
+  template: >
+    src=etc/neutron/dnsmasq-neutron.conf
+    dest=/etc/neutron/dnsmasq-neutron.conf
+    owner=root group=root mode=0644
+
+
+- name: ensure metadata agent is configured
+  template: >
+    src=etc/neutron/metadata_agent.ini
+    dest=/etc/neutron/metadata_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure LBaaS v2 agent is configured
+  template: >
+    src=etc/neutron/lbaas_agent.ini
+    dest=/etc/neutron/lbaas_agent.ini
+    owner=root group=root mode=0644
+  notify:
+    - restart neutron agents
+
+- name: ensure neutron-lbaas-dabatase is migrated
+  command: neutron-db-manage --subproject neutron-lbaas upgrade head
+    
+- name: ensure openvswitch-switch is restarted
+  service: name=openvswitch-switch state=restarted

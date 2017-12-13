@@ -36,3 +36,6 @@ neutron_identity_password: "neutron"
 region: RegionOne
 admin_pass: "asdasd"
 demo_pass: "asdasd"
+
+# # Neutron
+shared_secret: "asdasd"
