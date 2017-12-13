@@ -1,9 +1,9 @@
 - name: ensure br-int switch is created
-  openvswitch_bridge: bridge=br-int state=present
+  openvswitch_bridge: bridge=br-int state=present fail_mode=secure
   notify: restart ovs agent
 
 - name: ensure br-ex switch is created
-  openvswitch_bridge: bridge=br-ex state=present
+  openvswitch_bridge: bridge=br-ex state=present fail_mode=secure
   notify: restart ovs agent
 
 - name: ensure br-ex_setup.sh script is copied to the network-node
