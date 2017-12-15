@@ -20,6 +20,7 @@ network_node_netmask: 255.255.255.0
 controller_external_ip: 192.168.200.10
 storage_external_ip: 192.168.200.10
 network_node_external_ip: 192.168.200.10
+network_node_external_netmask: 255.255.255.0
 network_node_external_CIDR: 24
 external_gateway: 192.168.200.1
 int_nic: ens4
