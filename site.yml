@@ -28,9 +28,9 @@
 #  roles:
 #    - role: etcd
 
-- hosts: controller-nodes
-  roles:
-    - role: keystoneserver
+#- hosts: controller-nodes
+#  roles:
+#    - role: keystoneserver
 #
 #- hosts: controller-nodes
 #  roles:
@@ -60,21 +60,21 @@
 #  roles:
 #    - role: nova_init
 
-#- hosts: controller-nodes
-#  roles:
-#    - role: neutronserver
+- hosts: controller-nodes
+  roles:
+    - role: neutronserver
 
-#- hosts: network-nodes
-#  roles:
-#    - role: neutron-agents
+- hosts: network-nodes
+  roles:
+    - role: neutron-agents
 
 #- hosts: network-nodes
 #  roles:
 #  - role: openvswitch
 
-#- hosts: compute-nodes
-#  roles:
-#    - role: neutron-agents-compute
+- hosts: compute-nodes
+  roles:
+    - role: neutron-agents-compute
 
 #- hosts: controller-nodes
 #  roles:

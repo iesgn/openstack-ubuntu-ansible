@@ -36,12 +36,12 @@
   environment: '{{k3}}'
   command: /usr/bin/openstack role show user
   register: result
-  ignore_errors: True#
+  ignore_errors: True
 
 - name: ensure user role is created
   environment: '{{k3}}'
   command: /usr/bin/openstack role create user
-  when: result|failed#
+  when: result|failed
 
 - name: ensure user role is added to demo user
   environment: '{{k3}}'
