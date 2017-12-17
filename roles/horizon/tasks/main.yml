@@ -1,0 +1,18 @@
+- name: ensure horizon packages are installed 
+  apt: name={{ item }}  
+  with_items:
+    - openstack-dashboard
+
+- name: ensure dashboard is configured
+  template: >
+    src=etc/openstack-dashboard/local_settings.py
+    dest=/etc/openstack-dashboard/local_settings.py
+    owner=root group=root mode=0644
+  notify: restart web services
+
+- name: ensure default horizon theme is used
+  lineinfile: 
+    path: /etc/openstack-dashboard/local_settings.py
+    regexp: '^DEFAULT_THEME'
+    line: "DEFAULT_THEME = 'default'"
+  notify: restart web services
