@@ -32,20 +32,20 @@
   command: /usr/bin/openstack user create --domain default demo --password {{ demo_pass }}
   when: result|failed
 
-#- name: verify if user role has been created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack role show user
-#  register: result
-#  ignore_errors: True#
+- name: verify if user role has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role show user
+  register: result
+  ignore_errors: True#
 
-#- name: ensure user role is created
-#  environment: '{{k3}}'
-#  command: /usr/bin/openstack role create user
-#  when: result|failed#
+- name: ensure user role is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role create user
+  when: result|failed#
 
-#- name: ensure user role is added to demo user
-#  environment: '{{k3}}'
-#  command: openstack role add --project demo --user demo user
+- name: ensure user role is added to demo user
+  environment: '{{k3}}'
+  command: openstack role add --project demo --user demo user
   
 # Services and endpoints using templated.Catalog
 

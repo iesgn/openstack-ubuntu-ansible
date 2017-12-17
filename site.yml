@@ -22,15 +22,15 @@
 #    
 #- hosts: all
 #  roles:
-#    - role: openstackclient#
+#    - role: openstackclient
 
 #- hosts: controller-nodes
 #  roles:
 #    - role: etcd
 
-#- hosts: controller-nodes
-#  roles:
-#    - role: keystoneserver
+- hosts: controller-nodes
+  roles:
+    - role: keystoneserver
 #
 #- hosts: controller-nodes
 #  roles:
@@ -68,6 +68,14 @@
 #  roles:
 #    - role: neutron-agents
 
-- hosts: network-nodes
-  roles:
-  - role: openvswitch
+#- hosts: network-nodes
+#  roles:
+#  - role: openvswitch
+
+#- hosts: compute-nodes
+#  roles:
+#    - role: neutron-agents-compute
+
+#- hosts: controller-nodes
+#  roles:
+#    - role: horizon
