@@ -204,7 +204,7 @@
 
 - name: ensure neutron endpoint public is created
   environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} network public http://{{ controller_external_ip }}:9696
+  command: openstack endpoint create --region {{region}} network public http://{{ network_node_external_ip }}:9696
   when: result|failed
 
 - name: ensure neutron endpoint internal is created
