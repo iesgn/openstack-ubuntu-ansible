@@ -1,2 +1,0 @@
-- name: ensure python-openstackclient is installed
-  apt: name=python-openstackclient 

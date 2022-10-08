@@ -1,6 +1,0 @@
-- name: restart neutron-server
-  service: name=neutron-server state=restarted
-
-- name: restart ovs-agent
-  service: name=neutron-plugin-openvswitch-agent state=restarted
-  

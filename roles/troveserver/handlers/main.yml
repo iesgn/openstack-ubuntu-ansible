@@ -1,8 +1,0 @@
-
-- name: restart trove-services
-  service: name={{ item }} state=restarted
-  with_items:
-    - trove-api
-    - trove-taskmanager
-    - trove-conductor
-
