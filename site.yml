@@ -19,7 +19,7 @@
 #- hosts: controller-nodes
 #  roles:
 #    - role: memcached
-#    
+    
 #- hosts: all
 #  roles:
 #    - role: openstackclient
@@ -31,7 +31,7 @@
 #- hosts: controller-nodes
 #  roles:
 #    - role: keystoneserver
-#
+
 #- hosts: controller-nodes
 #  roles:
 #    - role: keystone_population
@@ -40,29 +40,29 @@
 #  roles: 
 #    - role: openrc
 
-- hosts: storage-nodes
-  roles: 
-    - role: glanceserver
+#- hosts: storage-nodes
+#  roles: 
+#    - role: glanceserver
 
 #- hosts: storage-nodes
 #  roles: 
 #    - role: glance_population
 
-- hosts: controller-nodes
-  roles:
-    - role: novaserver
+#- hosts: controller-nodes
+#  roles:
+#    - role: novaserver
 
-- hosts: compute-nodes
-  roles:
-    - role: novacompute
+#- hosts: compute-nodes
+#  roles:
+#    - role: novacompute
 
 #- hosts: controller-nodes
 #  roles:
 #    - role: nova_init
 
-- hosts: controller-nodes
-  roles:
-    - role: neutronserver
+#- hosts: controller-nodes
+#  roles:
+#    - role: neutronserver
 
 #- hosts: network-nodes
 #  roles:
@@ -72,10 +72,10 @@
 #  roles:
 #  - role: openvswitch
 
-- hosts: compute-nodes
-  roles:
-    - role: neutron-agents-compute
-
-#- hosts: controller-nodes
+#- hosts: compute-nodes
 #  roles:
-#    - role: horizon
+#    - role: neutron-agents-compute
+
+- hosts: controller-nodes
+  roles:
+    - role: horizon

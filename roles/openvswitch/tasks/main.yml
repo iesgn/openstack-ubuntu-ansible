@@ -13,8 +13,6 @@
     owner=root
     group=root
     mode=750
-- name: ensure external interface is properly configured
-  command: /root/br-ex_setup.sh
 
 - name: ensure br-ex is configured and external interface added permanently
   template: >-
@@ -22,3 +20,7 @@
     dest=/etc/network/interfaces
     owner=root
     group=root mode=0644
+
+- name: ensure external interface is properly configured
+  command: /root/br-ex_setup.sh
+

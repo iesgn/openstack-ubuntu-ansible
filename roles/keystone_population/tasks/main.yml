@@ -1,4 +1,51 @@
+#- name: verify if default domain has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack domain show default
+#  register: result
+#  ignore_errors: True#
 
+#- name: ensure default domain is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack domain create --description "Default Domain" Default
+#  when: result|failed#
+
+#- name: verify if admin project has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack project show admin
+#  register: result
+#  ignore_errors: True#
+
+#- name: ensure admin project is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack project create --domain default --description "Admin Project" admin
+#  when: result|failed#
+
+#- name: verify if admin user has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user show admin
+#  register: result
+#  ignore_errors: True#
+
+#- name: ensure admin user is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack user create --domain default admin --password {{ admin_pass }}
+#  when: result|failed#
+
+#- name: verify if admin role has been created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack role show admin
+#  register: result
+#  ignore_errors: True#
+
+#- name: ensure admin role is created
+#  environment: '{{k3}}'
+#  command: /usr/bin/openstack role create admin
+#  when: result|failed#
+
+#- name: ensure admin role is added to admin user
+#  environment: '{{k3}}'
+#  command: openstack role add --project admin --user admin admin
+#  
 - name: verify if service project has been created
   environment: '{{k3}}'
   command: /usr/bin/openstack project show service
@@ -49,21 +96,19 @@
   
 # Services and endpoints using templated.Catalog
 
-#- name: ensure service and endpoints are defined
-#  template: >-
-#    src=etc/keystone/default_catalog.templates
-#    dest=/etc/keystone/default_catalog.templates
-#    owner=root
-#    group=root
-#    mode=0644
-#  notify: restart apache2
+- name: ensure service and endpoints are defined
+  template: >-
+    src=etc/keystone/default_catalog.templates
+    dest=/etc/keystone/default_catalog.templates
+    owner=root
+    group=root
+    mode=0644
+  notify: restart apache2
 
-
-#Glance
-
-- name: verify if glance service has been created
+# Glance
+- name: verify if glance user has been created
   environment: '{{k3}}'
-  command: /usr/bin/openstack service show glance
+  command: /usr/bin/openstack user show glance
   register: result
   ignore_errors: True
 
@@ -75,34 +120,11 @@
 - name: ensure admin role is added to glance user
   environment: '{{k3}}'
   command: openstack role add --project service --user glance admin
-  when: result|failed
-
-- name: ensecue glance service is created
+  
+# Nova
+- name: verify if nova user has been created
   environment: '{{k3}}'
-  command: openstack service create --name glance --description "OpenStack Image" image
-  when: result|failed
-
-- name: ensure glance endpoint public is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} image public http://{{ storage_external_ip }}:9292
-  when: result|failed
-
-- name: ensure glance endpoint internal is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} image internal http://{{ storage_ip }}:9292
-  when: result|failed
-
-- name: ensure glance endpoint admin is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} image admin http://{{ storage_ip }}:9292
-  when: result|failed
-
-
-## Nova
-
-- name: verify if nova service has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack service show nova
+  command: /usr/bin/openstack user show nova
   register: result
   ignore_errors: True
 
@@ -114,37 +136,14 @@
 - name: ensure admin role is added to nova user
   environment: '{{k3}}'
   command: openstack role add --project service --user nova admin
-  when: result|failed
 
-- name: ensecue nova service is created
+# Placement
+
+- name: verify if Placement user has been created
   environment: '{{k3}}'
-  command: openstack service create --name nova --description "OpenStack Compute" compute
-  when: result|failed
-
-- name: ensure nova endpoint public is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} compute public http://{{ controller_external_ip }}:8774/v2.1
-  when: result|failed
-
-- name: ensure nova endpoint internal is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} compute internal http://{{ controller_ip }}:8774/v2.1
-  when: result|failed
-
-- name: ensure nova endpoint admin is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} compute admin http://{{ controller_ip }}:8774/v2.1
-  when: result|failed
-
-
-## Placement#
-
-- name: verify if placement service has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack service show placement
+  command: /usr/bin/openstack user show placement
   register: result
   ignore_errors: True
-
 
 - name: ensure placement user is created
   environment: '{{k3}}'
@@ -154,36 +153,11 @@
 - name: ensure admin role is added to placement user
   environment: '{{k3}}'
   command: openstack role add --project service --user placement admin
-  when: result|failed
 
-- name: ensecue placement service is created
+# Neutron
+- name: verify if neutron user has been created
   environment: '{{k3}}'
-  command: openstack service create --name placement --description "placement API" placement
-  when: result|failed
-
-
-- name: ensure placement endpoint public is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} placement public http://{{ controller_external_ip }}:8778
-  when: result|failed
-
-- name: ensure placement endpoint internal is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} placement internal http://{{ controller_ip }}:8778
-  when: result|failed
-
-- name: ensure placement endpoint admin is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} placement admin http://{{ controller_ip }}:8778
-  when: result|failed
-
-
-## Neutron
-
-
-- name: verify if neutron service has been created
-  environment: '{{k3}}'
-  command: /usr/bin/openstack service show neutron
+  command: /usr/bin/openstack user show neutron
   register: result
   ignore_errors: True
 
@@ -195,30 +169,7 @@
 - name: ensure admin role is added to neutron user
   environment: '{{k3}}'
   command: openstack role add --project service --user neutron admin
-  when: result|failed
-
-- name: ensecue neutron service is created
-  environment: '{{k3}}'
-  command: openstack service create --name neutron --description "OpenStack Networking" network
-  when: result|failed
-
-- name: ensure neutron endpoint public is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} network public http://{{ network_node_external_ip }}:9696
-  when: result|failed
-
-- name: ensure neutron endpoint internal is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} network internal http://{{ controller_ip }}:9696
-  when: result|failed
-
-- name: ensure neutron endpoint admin is created
-  environment: '{{k3}}'
-  command: openstack endpoint create --region {{region}} network admin http://{{ controller_ip }}:9696
-  when: result|failed
-
-
-#  
+  
 ## Cinder
 #- name: verify if cinder user has been created
 #  environment: '{{k3}}'
@@ -234,8 +185,8 @@
 #- name: ensure admin role is added to cinder user
 #  environment: '{{k3}}'
 #  command: openstack role add --project service --user cinder admin
-  
-# Heat
+#  
+## Heat
 #- name: verify if heat user has been created
 #  environment: '{{k3}}'
 #  command: /usr/bin/openstack user show heat
@@ -374,5 +325,5 @@
 #  
 #- name: ensure admin role is added to magnum user in the magnum domain
 #  environment: '{{k3}}'
-#  command: openstack role add --domain magnum --user-domain magnum --user magnum_domain_admin admin
+#  command: openstack role add --domain magnum --user-domain magnum --user magnum_domain_admin admin#
 

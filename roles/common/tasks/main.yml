@@ -4,8 +4,8 @@
 - name: Enable the OpenStack repository
   shell: add-apt-repository cloud-archive:pike
 
-#- name: Ensure system is upgraded (It can take a long time)
-#  apt: upgrade=yes update_cache=yes
+- name: Ensure system is upgraded (It can take a long time)
+  apt: upgrade=yes update_cache=yes
 
 - name: Ensure chrony is installed
   apt: name=chrony 
