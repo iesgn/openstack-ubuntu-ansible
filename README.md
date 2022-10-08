@@ -1,11 +1,11 @@
-# openstack-debian-ansible
+# openstack-ubuntu-ansible
 
 
-Playbooks ansible para la instalación de OpenStack Wallaby sobre Debian 11 Bullseye usando los repositorios backports que encontramos en [Openstack Debian wiki](https://wiki.debian.org/OpenStack).
+Playbooks ansible para la instalación de **OpenStack Yoga** sobre Ubuntu 22.04.
 
-Se ha seguido los pasos de la instalación base que se presenta en: [OpenStack Wallaby Installation Guide](https://docs.openstack.org/wallaby/install/) con algunas modificaciones por el uso de Debian.
+Se ha seguido los pasos de la instalación base que se presenta en: [OpenStack Yoga Installation Guide](https://docs.openstack.org/yoga/install/) con algunas modificaciones por algún problema que se ha encontrado durante la instalación.
 
-La opción de red usada es "Self-service networks" usando linux bridges: [Linux bridge: Self-service networks](https://docs.openstack.org/mitaka/networking-guide/deploy-lb-selfservice.html).
+La opción de red usada es "Self-service networks" usando linux bridges: [Linux bridge: Self-service networks](https://docs.openstack.org/neutron/pike/admin/deploy-lb-selfservice.html).
 
 Estos playbook están escritos para usarlos en el despliegue real de Openstack en servidores físicos, pero se pueden usar para desplegar en entornos de prueba con:
 
