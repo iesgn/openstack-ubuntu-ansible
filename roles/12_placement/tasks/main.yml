@@ -1,0 +1,59 @@
+# quitar apache2
+- name: ensure placement-api is installed
+  apt: name={{ item }}
+  loop:
+    - placement-api
+    - apache2
+    
+- name: ensure placement database connection is configured
+  ini_file:
+    path: /etc/placement/placement.conf
+    section: placement_database
+    option: connection
+    value: mysql+pymysql://placement:{{ placement_db_password }}@{{ internal_ip }}/placement
+  notify:
+  - restart placement
+
+- name: ensure auth_strategy is set to keystone
+  ini_file:
+    path: /etc/placement/placement.conf
+    section: api
+    option: auth_strategy
+    value: keystone
+  notify:
+  - restart placement
+
+- name: ensure keystone_authtoken is configured
+  ini_file:
+    path: /etc/placement/placement.conf
+    section: keystone_authtoken
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "username", value: placement}
+    - { option: "password", value: "{{ placement_identity_password }}" }
+  notify:
+  - restart placement
+
+#- name: ensure placement_authtoken is cleared
+#  ini_file:
+#    path: /etc/placement/placement.conf
+#    section: keystone_authtoken
+#    option: region_name
+#    value: regionOne
+#    state: absent
+#  notify:
+#  - restart placement
+
+- name: ensure placement db is initialized
+  command: /usr/bin/placement-manage db sync
+  notify:
+  - restart placement
+

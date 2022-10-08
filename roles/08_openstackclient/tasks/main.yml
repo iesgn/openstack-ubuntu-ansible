@@ -1,0 +1,7 @@
+- name: ensure python-openstackclient is installed
+  apt: name=python3-openstackclient 
+
+- name: ensure the rest of openstack clients are installed
+  apt: 
+    pkg: 
+    - python3-heatclient

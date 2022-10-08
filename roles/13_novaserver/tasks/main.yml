@@ -1,0 +1,200 @@
+#ram_allocation_ratio = 1.5
+#disk_allocation_ratio = 2.0   
+#cpu_allocation_ratio = 16
+
+
+- name: ensure nova packages are installed
+  apt: name={{ item }}
+  loop:
+    - nova-api
+    - nova-conductor
+    - nova-scheduler
+    #- nova-novncproxy
+    - nova-spiceproxy
+         
+
+- name: ensure nova_api database connections is configured
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: api_database
+    option: connection
+    value: mysql+pymysql://nova:{{ nova_db_password }}@{{ internal_ip }}/nova_api
+  notify: 
+  - restart nova-services
+
+- name: ensure nova database connections is configured
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: database
+    option: connection
+    value: mysql+pymysql://nova:{{ nova_db_password }}@{{ internal_ip }}/nova
+  notify: 
+  - restart nova-services
+
+- name: set default section options
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "transport_url",
+    value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ internal_ip }}:5672/'}
+    - { option: "my_ip", value: '{{ internal_ip }}' }
+  notify: 
+  - restart nova-services
+
+   
+- name: configure keystone_authtoken section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: keystone_authtoken
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "username", value: nova}
+    - { option: "password", value: "{{ nova_identity_password }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    #- { option: "region_name", value: "{{ region }}" }
+  #  - { option: "service_token_roles_required", value: true } # Hay que mirar esta opción, no aparece en la documentación
+  notify: 
+  - restart nova-services
+
+- name: ensure auth_strategy is set to keystone
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: api
+    option: auth_strategy
+    value: keystone
+  notify:
+  - restart nova-services
+
+#- name: configure vnc section 
+#  ini_file:
+#    path: /etc/nova/nova.conf
+#    section: vnc
+#    option: "{{ item.option }}"
+#    value: "{{ item.value }}"
+#  loop:
+#    - { option: "enabled", value: "true" }
+#    - { option: "server_listen", value: '$my_ip' }
+#    - { option: "server_proxyclient_address", value: '$my_ip' }
+#    - { option: "vncproxy_base_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["external_ip"] }}:6080/vnc_auto.html' }
+#  notify:
+#  - restart nova-services
+#
+
+- name: configure vnc section 
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: vnc
+    option: "enabled"
+    value: "false"
+  notify:
+  - restart nova-services
+
+
+- name: configure spice section 
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: spice
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "enabled", value: "true" }
+    - { option: "server_listen", value: '$my_ip' }
+    - { option: "server_proxyclient_address", value: '$my_ip' }
+    #- { option: "html5proxy_base_url", value: "https://{{ controller_fqdn }}:6082/spice_auto.html" }
+    - { option: "html5proxy_base_url", value: "http://172.22.121.1:6082/spice_auto.html" }
+    - { option: "html5proxy_host", value: "0.0.0.0" }
+    - { option: "html5proxy_port", value: "6082" }
+  notify:
+  - restart nova-services
+
+- name: configure glance section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: glance
+    option: api_servers
+    value: 'http://{{ hostvars[groups["storage_nodes"][0]]["internal_ip"] }}:9292' # No es internal_ip, es la dirección de glance que puede estar en otro nodo
+  notify:
+  - restart nova-services
+
+- name: configure oslo_concurrency section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: oslo_concurrency
+    option: lock_path
+    value: /var/lib/nova/tmp
+  notify:
+  - restart nova-services
+
+- name: configure placement section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: placement
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "region_name", value: "{{ region }}" }    
+    - { option: "project_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "auth_type", value: password }
+    - { option: "user_domain_name", value: Default}
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000/v3' }
+    - { option: "username", value: placement}
+    - { option: "password", value: "{{ placement_identity_password }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    
+  notify: 
+  - restart nova-services
+
+- name: configure neutron section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: neutron
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "region_name", value: "{{ region }}" }
+    - { option: "project_name", value: service}
+    - { option: "username", value: neutron}
+    - { option: "password", value: "{{ neutron_identity_password }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    - { option: "service_metadata_proxy", value: "true"}
+    - { option: "metadata_proxy_shared_secret", value: "{{ shared_secret }}" }
+  notify: 
+  - restart nova-services
+
+- name: configure cinder section
+  ini_file:
+    path: /etc/nova/nova.conf
+    section: cinder
+    option: os_region_name
+    value: "{{ region }}"
+
+- name: populate nova-api db
+  command: /usr/bin/nova-manage api_db sync
+
+- name: register the cell0 db
+  command: /usr/bin/nova-manage cell_v2 map_cell0
+
+# Errors ignored for idempotency
+- name: create the cell1
+  command: /usr/bin/nova-manage cell_v2 create_cell --name=cell1
+  ignore_errors: True
+
+- name: populate nova db
+  command: /usr/bin/nova-manage db sync
+

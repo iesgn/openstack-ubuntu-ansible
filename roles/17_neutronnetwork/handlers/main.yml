@@ -1,0 +1,5 @@
+- name: restart neutron-services
+  service: name={{ item }} state=restarted
+  with_items:
+    - neutron-l3-agent
+    - neutron-linuxbridge-agent

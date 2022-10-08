@@ -1,0 +1,168 @@
+- name: ensure keystone database is present
+  mysql_db: name=keystone
+
+- name: ensure keystone database user is present
+  mysql_user:
+    name: keystone
+    host: "{{ item }}"
+    password: "{{ keystone_db_password }}"
+    priv: 'keystone.*:ALL'
+  loop:
+    - '%'
+    - localhost
+
+- name: ensure glance database is present
+  mysql_db:
+    name: glance
+
+- name: ensure glance database user is present
+  mysql_user:
+    name: glance
+    host: "{{ item }}"
+    password: "{{ glance_db_password }}"
+    priv: 'glance.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+
+- name: ensure cinder database is present
+  mysql_db: name=cinder
+
+- name: ensure cinder database user is present
+  mysql_user:
+    name: cinder
+    host: "{{ item }}"
+    password: "{{ cinder_db_password }}"
+    priv: 'cinder.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+
+#- name: ensure manila database is present
+#  mysql_db: name=manila
+#
+#- name: ensure manila database user is present
+#  mysql_user:
+#    name: manila
+#    host: "{{ item }}"
+#    password: "{{ manila_db_password }}"
+#    priv: 'manila.*:ALL'
+#  loop:
+#    - '%'
+#    - localhost
+#    
+
+- name: ensure placement databases is present
+  mysql_db: name=placement
+
+- name: ensure placement database user is present
+  mysql_user:
+    name: placement
+    host: "{{ item }}"
+    password: "{{ placement_db_password }}"
+    priv: 'placement.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+
+- name: ensure nova, nova_cell0 and nova_api databases are present
+  mysql_db: name={{ item }}
+  loop:
+    - nova
+    - nova_api
+    - nova_cell0
+
+- name: ensure nova database user is present in nova 
+  mysql_user:
+    name: nova
+    host: "{{ item }}"
+    password: "{{ nova_db_password }}"
+    priv: 'nova.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+
+- name: ensure nova database user is present in nova_api
+  mysql_user:
+    name: nova
+    host: "{{ item }}"
+    password: "{{ nova_db_password }}"
+    priv: 'nova_api.*:ALL'
+    append_privs: yes
+  loop:
+    - '%'
+    - localhost
+    
+
+- name: ensure nova database user is present in nova_cell0
+  mysql_user:
+    name: nova
+    host: "{{ item }}"
+    password: "{{ nova_db_password }}"
+    priv: 'nova_cell0.*:ALL'
+    append_privs: yes
+  loop:
+    - '%'
+    - localhost
+    
+
+- name: ensure neutron database is present
+  mysql_db: name=neutron
+    
+- name: ensure neutron database user is present
+  mysql_user:
+    name: neutron
+    host: "{{ item }}"
+    password: "{{ neutron_db_password }}"
+    priv: 'neutron.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+                   
+- name: ensure heat database is present
+  mysql_db: name=heat
+    
+- name: ensure heat database user is present
+  mysql_user:
+    name: heat
+    host: "{{ item }}"
+    password: "{{ heat_db_password }}"
+    priv: 'heat.*:ALL'
+  loop:
+    - '%'
+    - localhost
+    
+                   
+#- name: ensure trove database is present
+#  mysql_db: name=trove
+#    
+#- name: ensure trove database user is present
+#  mysql_user:
+#    name: trove
+#    host: "{{ item }}"
+#    password: "{{ trove_db_password }}"
+#    priv: 'trove.*:ALL'
+#  loop:
+#    - '%'
+#    - localhost
+#    
+#
+#- name: ensure magnum database is present
+#  mysql_db: name=magnum
+#    
+#- name: ensure magnum database user is present
+#  mysql_user:
+#    name: magnum
+#    host: "{{ item }}"
+#    password: "{{ magnum_db_password }}"
+#    priv: 'magnum.*:ALL'
+#  loop:
+#    - '%'
+#    - localhost
+#    
+#

@@ -1,0 +1,149 @@
+- name: ensure neutron-linuxbridge-agent. dhcp-agent, metadata-agent is installed
+  apt: name={{ item }}
+  loop:
+    #- neutron-server
+    #- neutron-plugin-ml2
+    - neutron-linuxbridge-agent
+    #- neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
+
+- name: set default section options
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "transport_url",
+    value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5672/'}
+    - { option: "auth_strategy", value: keystone }
+  notify: 
+  - restart neutron-services
+  
+- name: unset interface_driver option
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: DEFAULT
+    option: "interface_driver"
+    state: absent
+  notify: 
+  - restart neutron-services
+
+- name: unset connection option
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: database
+    option: "connection"
+    state: absent
+  notify: 
+  - restart neutron-services
+
+- name: configure keystone_authtoken section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: keystone_authtoken
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "www_authenticate_uri", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "auth_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "memcached_servers", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:11211' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "username", value: neutron}
+    - { option: "password", value: "{{ neutron_identity_password }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    - { option: "region_name", value: "{{ region }}" }    
+  notify: 
+  - restart neutron-services
+
+- name: configure oslo_concurrency section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: oslo_concurrency
+    option: lock_path
+    value: /var/lib/neutron/tmp
+  notify:
+  - restart neutron-services
+
+
+########
+# Linux Bridge
+########
+
+   
+- name: configure the Linux bridge agent. vxlan section
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
+    section: vxlan
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "enable_vxlan", value: "true" }
+    - { option: "local_ip", value: "{{ internal_ip }}" }
+    - { option: "l2_population", value: "true" }
+  notify:
+  - restart neutron-services
+
+
+
+
+
+###########
+# DHCP
+###########
+
+
+- name: configure the DHCP agent
+  ini_file:
+    path: /etc/neutron/dhcp_agent.ini
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "interface_driver", value: linuxbridge }
+    - { option: "dhcp_driver", value: neutron.agent.linux.dhcp.Dnsmasq }
+    - { option: "enable_isolated_metadata", value: "true" }
+    - { option: "force_metadata", value: "true" }
+  notify:
+  - restart neutron-services
+
+###########
+# METADATA
+###########
+
+
+- name: configure the metadata agent
+  ini_file:
+    path: /etc/neutron/metadata_agent.ini
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "nova_metadata_host", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}' }
+    - { option: "metadata_proxy_shared_secret", value: "{{ shared_secret }}" }
+  notify:
+  - restart neutron-services
+
+
+# Needed when /proc/sys/net/bridge is missing
+- name: load br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+    state: present
+
+- name: set net.bridge.bridge-nf-call-iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    reload: yes
+
+- name: set net.bridge.bridge-nf-call-ip6tables
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
+    reload: yes
+

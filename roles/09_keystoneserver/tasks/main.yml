@@ -1,0 +1,76 @@
+- name: ensure keystone are installed
+  apt: name={{ item }}
+  loop:
+    - keystone
+    - apache2
+
+- name: ensure keystone database connections is configured
+  ini_file:
+    path: /etc/keystone/keystone.conf
+    section: database
+    option: connection
+    value: mysql+pymysql://keystone:{{ keystone_db_password }}@{{ internal_ip }}/keystone
+  notify: restart keystone    
+
+- name: ensure keystone is configured to use fernet tokens
+  ini_file:
+    path: /etc/keystone/keystone.conf
+    section: token
+    option: provider
+    value: fernet
+  notify: restart keystone    
+
+#- name: ensure cache is enabled in keystone
+#  ini_file:
+#    path: /etc/keystone/keystone.conf
+#    section: cache
+#    option: enabled
+#    value: 'true'
+#  notify: restart keystone    
+#
+#- name: ensure dogfile.cache.memcached is configured as backend for cache
+#  ini_file:
+#    path: /etc/keystone/keystone.conf
+#    section: cache
+#    option: backend
+#    value: dogpile.cache.memcached
+#  notify: restart keystone    
+#
+#- name: ensure memcached url is set for dogfile
+#  ini_file:
+#    path: /etc/keystone/keystone.conf
+#    section: cache
+#    option: backend_argument
+#    value: url:127.0.0.1:11211
+#  notify: restart keystone    
+#
+- name: ensure keystone is configured to use template catalog
+  ini_file:
+    path: /etc/keystone/keystone.conf
+    section: catalog
+    option: driver
+    value: templated
+  notify: restart keystone    
+
+- name: ensure keystone template catalog is updated
+  template:
+    src: etc/keystone/default_catalog.templates
+    dest: /etc/keystone/default_catalog.templates
+    owner: keystone
+    group: keystone
+    mode: 0644
+  notify: restart keystone    
+
+  
+- name: DB sync for keystone
+  shell: keystone-manage db_sync
+
+- name: Fernet keys initialization
+  shell: /usr/bin/keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone && keystone-manage credential_setup --keystone-user keystone --keystone-group keystone
+
+- name: bootstrap identity service
+  shell: keystone-manage bootstrap --bootstrap-password '{{ admin_pass }}' --bootstrap-admin-url http://{{ internal_ip }}:5000/v3/ --bootstrap-internal-url http://{{ internal_ip }}:5000/v3/  --bootstrap-public-url http://{{ controller_fqdn }}:5000/v3/   --bootstrap-region-id {{ region }}
+  register: kb
+  failed_when: "kb.rc not in [ 0, 1 ]"
+ 
+  

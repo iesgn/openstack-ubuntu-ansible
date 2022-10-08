@@ -1,0 +1,2 @@
+- name: restart placement
+  service: name=apache2 state=restarted

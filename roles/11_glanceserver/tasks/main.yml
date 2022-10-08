@@ -1,0 +1,70 @@
+- name: ensure glance is installed
+  apt: name=glance
+
+- name: ensure glance database connection is configured
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: database
+    option: connection
+    value: mysql+pymysql://glance:{{ glance_db_password }}@{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}/glance
+  notify:
+  - restart glance-api
+
+- name: ensure glance_authtoken is configured
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: keystone_authtoken
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "www_authenticate_uri", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "auth_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "memcached_servers", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:11211' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "username", value: glance}
+    - { option: "password", value: "{{ glance_identity_password }}" }
+  notify:
+  - restart glance-api
+
+#- name: ensure glance_authtoken is cleared
+#  ini_file:
+#    path: /etc/glance/glance-api.conf
+#    section: keystone_authtoken
+#    option: region_name
+#    value: regionOne
+#    state: absent
+#  notify:
+#  - restart glance-api
+
+- name: ensure paste_deploy is set to glance
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: paste_deploy
+    option: flavor
+    value: keystone
+  notify:
+  - restart glance-api
+
+- name: ensure glance_store is set to glance
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: glance_store
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "stores", value: 'file,http' }
+    - { option: "default_store", value: file }
+    - { option: "filesystem_store_datadir", value: /var/lib/glance/images/ }
+  notify:
+  - restart glance-api
+
+
+
+- name: ensure glance db is initialized
+  command: /usr/bin/glance-manage db_sync
+  notify:
+  - restart glance-api
+  

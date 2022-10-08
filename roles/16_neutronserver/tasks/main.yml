@@ -1,0 +1,181 @@
+# Configurar ubuntu para que funcione /etc/network/interfaces
+# Para configurar el no de red como se indica en https://docs.openstack.org/neutron/yoga/install/environment-networking-controller-ubuntu.html
+# Dos referencias:
+# https://linuxconfig.org/how-to-switch-back-networking-to-etc-network-interfaces-on-ubuntu-22-04-jammy-jellyfish-linux
+# https://juliorestrepo.wordpress.com/2021/07/15/netplan-remove-uninstall-disable-ubuntu/
+
+
+- name: ensure neutron server and neutron-plugin-ml2 are installed
+  apt: name={{ item }}
+  loop:
+    - neutron-server
+    - neutron-plugin-ml2
+    #- neutron-linuxbridge-agent
+    #- neutron-l3-agent
+    #- neutron-dhcp-agent
+    #- neutron-metadata-agent
+
+- name: ensure neutron database connections is configured
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: database
+    option: connection
+    value: mysql+pymysql://neutron:{{ neutron_db_password }}@{{ internal_ip }}/neutron
+  notify: 
+  - restart neutron-services
+
+- name: set default section options
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "transport_url", value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ internal_ip }}:5672/'}
+    - { option: "core_plugin", value: ml2 }
+    - { option: "service_plugins", value: router }
+    - { option: "allow_overlapping_ips", value: "true" }
+    - { option: "notify_nova_on_port_status_changes", value: "true" } 
+    - { option: "notify_nova_on_port_data_changes", value: "true" } 
+    - { option: "auth_strategy", value: keystone }
+  notify: 
+  - restart neutron-services
+
+- name: unset interface_driver option
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: DEFAULT
+    option: "interface_driver"
+    state: absent
+  notify:
+  - restart neutron-services
+
+- name: configure keystone_authtoken section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: keystone_authtoken
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "project_name", value: service}
+    - { option: "username", value: neutron}
+    - { option: "password", value: "{{ neutron_identity_password }}" }
+    - { option: "region", value: "{{ region }}" }    
+    #- { option: "region_name", value: "{{ region }}" }
+    #- { option: "service_token_roles_required", value: "true" }
+  notify: 
+  - restart neutron-services
+
+- name: ensure neutron_authtoken is cleared
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: keystone_authtoken
+    option: region_name
+    value: regionOne
+    state: absent
+  notify:
+  - restart neutron-services
+
+- name: configure oslo_concurrency section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: oslo_concurrency
+    option: lock_path
+    value: /var/lib/neutron/tmp
+  notify:
+  - restart neutron-services
+
+- name: configure nova section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: nova
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "auth_type", value: password }
+    - { option: "project_domain_name", value: Default}
+    - { option: "user_domain_name", value: Default}
+    - { option: "region_name", value: "{{ region }}" }    
+    - { option: "project_name", value: service}
+    - { option: "username", value: nova}
+    - { option: "password", value: "{{ nova_identity_password }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    
+  notify: 
+  - restart neutron-services
+
+- name: configure ml2 plugin
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "type_drivers", value: "flat,vlan,vxlan" }
+    - { option: "tenant_network_types", value: vxlan }
+    - { option: "mechanism_drivers", value: "linuxbridge,l2population" }
+    - { option: "extension_drivers", value: port_security }
+    #- { option: "flat_networks", value: provider }
+  notify:
+  - restart neutron-services
+
+- name: configure ml2 plugin (flat_networks)
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2_type_flat
+    option: flat_networks
+    value: 'provider'
+  notify:
+  - restart neutron-services
+
+
+
+- name: configure ml2 plugin (vni_ranges)
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: ml2_type_vxlan
+    option: vni_ranges
+    value: '1:1000'
+  notify:
+  - restart neutron-services
+
+- name: configure ml2 plugin (enable_ipset)
+  ini_file:
+    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+    section: securitygroup
+    option: enable_ipset
+    value: 'true'
+  notify:
+  - restart neutron-services
+
+
+# Needed when /proc/sys/net/bridge is missing
+- name: load br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+    state: present
+    
+- name: set net.bridge.bridge-nf-call-iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    reload: yes
+
+- name: set net.bridge.bridge-nf-call-ip6tables
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
+    reload: yes
+
+
+- name: ensure neutron db is initialized
+  command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
+  notify:
+    - restart neutron-services
