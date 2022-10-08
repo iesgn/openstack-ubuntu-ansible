@@ -1,13 +1,27 @@
-- name: ensure cirros image is added to glance
-  glance_image: >-  
-    auth_url=http://{{ controller_ip }}:5000/v3/
-    copy_from={{ img_url }}
-    name={{ img_name }}
-    container_format=bare
-    disk_format=qcow2
-    state=present
-    login_username=demo
-    login_tenant_name=demo
-    login_password={{ demo_pass }}
-    region_name={{ region }}
+# - name: ensure cirros image is added to glance
+#   glance_image: >-  
+#     auth_url=http://{{ controller_ip }}:5000/v3/
+#     copy_from={{ img_url }}
+#     name={{ img_name }}
+#     container_format=bare
+#     disk_format=qcow2
+#     state=present
+#     login_username=demo
+#     login_tenant_name=demo
+#     login_password={{ demo_pass }}
+#     region_name={{ region }}
+
+- name: ensure debian image is added to glance
+  os_image: 
+    auth:
+      auth_url: http://{{ controller_ip }}:5000/v2.0
+      username: demo
+      password: asdasd
+      project_name: demo
+    name: Jessie
+    filename: debian-8.2.0-openstack-amd64.qcow2
+    container_format: bare
+    disk_format: qcow2
+    state: present
+#    region_name={{ region }}
 

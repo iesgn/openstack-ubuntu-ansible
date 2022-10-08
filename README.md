@@ -1,7 +1,7 @@
 openstack-ubuntu-ansible
 ========================
 
-Ansible playbooks for installing OpenStack on Ubuntu.
+Ansible playbooks for installing *OpenStack Kilo* on Ubuntu Trusty (14.04)
 
 These playbooks have been written in the hope of using them in a real deployment
 with physical servers, but thay can be used too to deploy a OpenStack test
