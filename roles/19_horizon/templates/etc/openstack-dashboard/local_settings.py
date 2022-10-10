@@ -93,7 +93,7 @@ SECRET_KEY = secret_key.generate_or_read_from_file('/var/lib/openstack-dashboard
 # For more information, see
 # https://docs.djangoproject.com/en/1.11/topics/http/sessions/.
 
-OPENSTACK_HOST = {{ internal_ip }}
+OPENSTACK_HOST = "{{ internal_ip }}"
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
