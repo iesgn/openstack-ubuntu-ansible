@@ -109,7 +109,7 @@
 
 
 
- Needed when /proc/sys/net/bridge is missing
+# Needed when /proc/sys/net/bridge is missing
 - name: load br_netfilter kernel module
   modprobe:
     name: br_netfilter
