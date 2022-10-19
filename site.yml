@@ -97,17 +97,17 @@
 #   - role: 16_neutronserver
 #  
 #
-- hosts: network_nodes
-  become: true
-  gather_facts: no
-  roles:
-   - role: 17_neutronnetwork
-#
-#- hosts: compute_nodes
+#- hosts: network_nodes
 #  become: true
 #  gather_facts: no
 #  roles:
-#    - role: 18_neutroncompute
+#   - role: 17_neutronnetwork
+#
+- hosts: compute_nodes
+  become: true
+  gather_facts: no
+  roles:
+    - role: 18_neutroncompute
 #
 #- hosts: controller_nodes
 #  become: true

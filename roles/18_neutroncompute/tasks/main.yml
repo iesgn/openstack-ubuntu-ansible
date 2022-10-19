@@ -72,6 +72,15 @@
 ########
 
    
+- name: configure the Linux bridge agent. linux_bridge section
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
+    section: linux_bridge
+    option: "physical_interface_mappings"
+    value: "provider:{{ external_interface }}"
+  notify:
+  - restart neutron-services
+    
 - name: configure the Linux bridge agent. vxlan section
   ini_file:
     path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
@@ -85,28 +94,35 @@
   notify:
   - restart neutron-services
 
+- name: configure the Linux bridge agent. securitygroup section
+  ini_file:
+    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
+    section: securitygroup
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "enable_security_group", value: "true" }
+    - { option: "firewall_driver", value: neutron.agent.linux.iptables_firewall.IptablesFirewallDriver }
+  notify:
+  - restart neutron-services
 
 
 
 
+ Needed when /proc/sys/net/bridge is missing
+- name: load br_netfilter kernel module
+  modprobe:
+    name: br_netfilter
+    state: present
 
+- name: set net.bridge.bridge-nf-call-iptables
+  sysctl:
+    name: net.bridge.bridge-nf-call-iptables
+    value: '1'
+    reload: yes
 
-
-# Needed when /proc/sys/net/bridge is missing
-#- name: load br_netfilter kernel module
-#  modprobe:
-#    name: br_netfilter
-#    state: present
-#
-#- name: set net.bridge.bridge-nf-call-iptables
-#  sysctl:
-#    name: net.bridge.bridge-nf-call-iptables
-#    value: '1'
-#    reload: yes
-#
-#- name: set net.bridge.bridge-nf-call-ip6tables
-#  sysctl:
-#    name: net.bridge.bridge-nf-call-ip6tables
-#    value: '1'
-#    reload: yes
-
+- name: set net.bridge.bridge-nf-call-ip6tables
+  sysctl:
+    name: net.bridge.bridge-nf-call-ip6tables
+    value: '1'
+    reload: yes
