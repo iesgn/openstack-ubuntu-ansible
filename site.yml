@@ -103,11 +103,11 @@
 #  roles:
 #   - role: 17_neutronnetwork
 #
-- hosts: compute_nodes
-  become: true
-  gather_facts: no
-  roles:
-    - role: 18_neutroncompute
+#- hosts: compute_nodes
+#  become: true
+#  gather_facts: no
+#  roles:
+#    - role: 18_neutroncompute
 #
 #- hosts: controller_nodes
 #  become: true
@@ -115,23 +115,23 @@
 #  roles:
 #    - role: 19_horizon
 #
-#- hosts: controller_nodes
-#  become: true
-#  gather_facts: no
-#  roles:
-#    - role: 20_cinderserver
-#
-#- hosts: storage_nodes
-#  become: true
-#  gather_facts: no
-#  roles:
-#    - role: 21_cindervolume
-#
-#- hosts: compute_nodes
-#  become: true
-#  gather_facts: no
-#  roles:
-#    - role: 22_cindercompute
+- hosts: controller_nodes
+  become: true
+  gather_facts: no
+  roles:
+    - role: 20_cinderserver
+
+- hosts: storage_nodes
+  become: true
+  gather_facts: no
+  roles:
+    - role: 21_cindervolume
+
+- hosts: compute_nodes
+  become: true
+  gather_facts: no
+  roles:
+    - role: 22_cindercompute
 #
 #- hosts: controller_nodes
 #  become: true
