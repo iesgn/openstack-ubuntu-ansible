@@ -72,14 +72,14 @@
 ########
 
    
-- name: configure the Linux bridge agent. linux_bridge section
-  ini_file:
-    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
-    section: linux_bridge
-    option: "physical_interface_mappings"
-    value: "provider:{{ external_interface }}"
-  notify:
-  - restart neutron-services
+#- name: configure the Linux bridge agent. linux_bridge section
+#  ini_file:
+#    path: /etc/neutron/plugins/ml2/linuxbridge_agent.ini 
+#    section: linux_bridge
+#    option: "physical_interface_mappings"
+#    value: "provider:{{ external_interface }}"
+#  notify:
+#  - restart neutron-services
     
 - name: configure the Linux bridge agent. vxlan section
   ini_file:
