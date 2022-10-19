@@ -1,12 +1,9 @@
 - name: ensure neutron-linuxbridge-agent. dhcp-agent, metadata-agent is installed
   apt: name={{ item }}
   loop:
-    #- neutron-server
-    #- neutron-plugin-ml2
+    
     - neutron-linuxbridge-agent
-    #- neutron-l3-agent
-    - neutron-dhcp-agent
-    - neutron-metadata-agent
+   
 
 - name: set default section options
   ini_file:
@@ -92,58 +89,24 @@
 
 
 
-###########
-# DHCP
-###########
 
-
-- name: configure the DHCP agent
-  ini_file:
-    path: /etc/neutron/dhcp_agent.ini
-    section: DEFAULT
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
-  loop:
-    - { option: "interface_driver", value: linuxbridge }
-    - { option: "dhcp_driver", value: neutron.agent.linux.dhcp.Dnsmasq }
-    - { option: "enable_isolated_metadata", value: "true" }
-    - { option: "force_metadata", value: "true" }
-  notify:
-  - restart neutron-services
-
-###########
-# METADATA
-###########
-
-
-- name: configure the metadata agent
-  ini_file:
-    path: /etc/neutron/metadata_agent.ini
-    section: DEFAULT
-    option: "{{ item.option }}"
-    value: "{{ item.value }}"
-  loop:
-    - { option: "nova_metadata_host", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}' }
-    - { option: "metadata_proxy_shared_secret", value: "{{ shared_secret }}" }
-  notify:
-  - restart neutron-services
 
 
 # Needed when /proc/sys/net/bridge is missing
-- name: load br_netfilter kernel module
-  modprobe:
-    name: br_netfilter
-    state: present
-
-- name: set net.bridge.bridge-nf-call-iptables
-  sysctl:
-    name: net.bridge.bridge-nf-call-iptables
-    value: '1'
-    reload: yes
-
-- name: set net.bridge.bridge-nf-call-ip6tables
-  sysctl:
-    name: net.bridge.bridge-nf-call-ip6tables
-    value: '1'
-    reload: yes
+#- name: load br_netfilter kernel module
+#  modprobe:
+#    name: br_netfilter
+#    state: present
+#
+#- name: set net.bridge.bridge-nf-call-iptables
+#  sysctl:
+#    name: net.bridge.bridge-nf-call-iptables
+#    value: '1'
+#    reload: yes
+#
+#- name: set net.bridge.bridge-nf-call-ip6tables
+#  sysctl:
+#    name: net.bridge.bridge-nf-call-ip6tables
+#    value: '1'
+#    reload: yes
 

@@ -1,12 +1,12 @@
 ---
 
 
-- hosts: all
-  become: true
-  gather_facts: no
-  roles:
-    - role: 01_common
-
+#- hosts: all
+#  become: true
+#  gather_facts: no
+#  roles:
+#    - role: 01_common
+#
 
 #- hosts: controller_nodes
 #  become: true
@@ -97,11 +97,11 @@
 #   - role: 16_neutronserver
 #  
 #
-#- hosts: network_nodes
-#  become: true
-#  gather_facts: no
-#  roles:
-#   - role: 17_neutronnetwork
+- hosts: network_nodes
+  become: true
+  gather_facts: no
+  roles:
+   - role: 17_neutronnetwork
 #
 #- hosts: compute_nodes
 #  become: true

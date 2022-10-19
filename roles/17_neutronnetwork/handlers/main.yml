@@ -3,3 +3,5 @@
   with_items:
     - neutron-l3-agent
     - neutron-linuxbridge-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
