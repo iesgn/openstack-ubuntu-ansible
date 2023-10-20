@@ -80,7 +80,7 @@
     - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
     - { option: "send_service_user_token", value: True }
     - { option: "auth_type", value: password }
-    - { option: "project_domain_name", value: Default}
+    - { option: "project_domain_name", value: Defaul}
     - { option: "user_domain_name", value: Default}
     - { option: "project_name", value: service}
     - { option: "username", value: cinder}
