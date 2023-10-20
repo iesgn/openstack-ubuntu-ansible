@@ -67,8 +67,8 @@
     - { option: "project_domain_name", value: Default}
     - { option: "user_domain_name", value: Default}
     - { option: "project_name", value: service}
-    - { option: "username", value: cinder}
-    - { option: "password", value: "{{ cinder_identity_password }}" }
+    - { option: "username", value: nova}
+    - { option: "password", value: "{{ nova_identity_password }}" }
   notify: 
   - restart cinder-services
 
