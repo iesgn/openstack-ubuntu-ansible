@@ -194,6 +194,46 @@
   command: /usr/bin/openstack role create heat_stack_user
   when: result is failed
 
+
+## Solución problema nova-cinder
+## https://docs.openstack.org/cinder/latest/configuration/block-storage/service-token.html
+
+- name: verify if service role has been created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role show service
+  register: result
+  ignore_errors: True
+
+- name: ensure service role is created
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role create service
+  when: result is failed
+
+- name: verify if user cinder is in service role
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role assignment list --user cinder --project service --names
+  register: result
+  ignore_errors: True
+
+- name: ensure service role is added to cinder user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user cinder service
+  when: result is failed
+
+
+- name: verify if user nova is in service role
+  environment: '{{k3}}'
+  command: /usr/bin/openstack role assignment list --user nova --project service --names
+  register: result
+  ignore_errors: True
+
+- name: ensure service role is added to nova user
+  environment: '{{k3}}'
+  command: openstack role add --project service --user nova service
+  when: result is failed
+
+
+
 # Manila
 #- name: verify if manila user has been created
 #  environment: '{{k3}}'
