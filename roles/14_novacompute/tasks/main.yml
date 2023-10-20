@@ -48,8 +48,8 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
-    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
+    - { option: "www_authenticate_uri", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000/' }
+    - { option: "auth_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000/' }
     - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
     - { option: "send_service_user_token", value: True }
     - { option: "auth_type", value: password }
