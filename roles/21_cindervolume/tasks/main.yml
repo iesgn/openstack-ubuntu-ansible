@@ -86,7 +86,7 @@
     - { option: "username", value: cinder}
     - { option: "password", value: "{{ cinder_identity_password }}" }
   notify: 
-  - restart cinder-service
+  - restart cinder-services
 
 - name: configure lvm section
   ini_file:
