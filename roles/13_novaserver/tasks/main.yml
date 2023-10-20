@@ -139,7 +139,7 @@
     - { option: "html5proxy_host", value: "0.0.0.0" }
     - { option: "html5proxy_port", value: "6082" }
     - { option: "keymap", value: "es-es" }
-    - { option: "agent_enabled", value: "true" }
+    
     
   notify:
   - restart nova-services
