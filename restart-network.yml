@@ -1,0 +1,29 @@
+---
+- hosts: network_nodes
+  become: true
+  gather_facts: no
+  tasks:
+    - name: restart neutron-services
+      service: name={{ item }} state=restarted
+        with_items:
+          - neutron-l3-agent
+          - neutron-linuxbridge-agent
+          - neutron-dhcp-agent
+          - neutron-metadata-agent
+- hosts: controller_nodes
+  become: true
+  gather_facts: no
+  tasks:
+    - name: restart neutron-services
+      service: name={{ item }} state=restarted
+        loop:
+          - neutron-server
+          - nova-api
+- hosts: compute_nodes
+  become: true
+  gather_facts: no
+  tasks:
+    - name: restart neutron-services
+      service: name={{ item }} state=restarted
+        loop:
+          - neutron-linuxbridge-agent
