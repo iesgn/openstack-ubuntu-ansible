@@ -1,4 +1,3 @@
----
 - hosts: network_nodes
   become: true
   gather_facts: no
