@@ -29,15 +29,6 @@
   notify:
   - restart glance-api
 
-#- name: ensure glance_authtoken is cleared
-#  ini_file:
-#    path: /etc/glance/glance-api.conf
-#    section: keystone_authtoken
-#    option: region_name
-#    value: regionOne
-#    state: absent
-#  notify:
-#  - restart glance-api
 
 - name: ensure paste_deploy is set to glance
   ini_file:
@@ -48,18 +39,53 @@
   notify:
   - restart glance-api
 
+- name: ensure DEFAULT is set to glance
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: DEFAULT
+    option: "enabled_backends"
+    value: "fs:file"
+  notify:
+  - restart glance-api
+
 - name: ensure glance_store is set to glance
   ini_file:
     path: /etc/glance/glance-api.conf
     section: glance_store
+    option: default_backend
+    value: fs
+  notify:
+  - restart glance-api
+
+- name: ensure fs is set to glance
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: fs
+    option: filesystem_store_datadir
+    value: /var/lib/glance/images/
+  notify:
+  - restart glance-api
+
+
+- name: ensure oslo_limit is set to glance
+  ini_file:
+    path: /etc/glance/glance-api.conf
+    section: oslo_limit
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "stores", value: 'file,http' }
-    - { option: "default_store", value: file }
-    - { option: "filesystem_store_datadir", value: /var/lib/glance/images/ }
+    - { option: "auth_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "auth_type", value: 'password' }
+    - { option: "user_domain_id", value: 'default' }
+    - { option: "username", value: 'glance' }
+    - { option: "system_scope", value: 'all' }
+    - { option: "password", value: '{{ glance_identity_password }}' }
+    - { option: "endpoint_id", value: 'RegionOne-image-public' }
+    - { option: "region_name", value: '{{region}}' }
+    
   notify:
   - restart glance-api
+
 
 
 

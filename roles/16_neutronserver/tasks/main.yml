@@ -10,10 +10,10 @@
   loop:
     - neutron-server
     - neutron-plugin-ml2
-    #- neutron-linuxbridge-agent
-    #- neutron-l3-agent
-    #- neutron-dhcp-agent
-    #- neutron-metadata-agent
+    - neutron-openvswitch-agent
+    - neutron-l3-agent
+    - neutron-dhcp-agent
+    - neutron-metadata-agent
 
 - name: ensure neutron database connections is configured
   ini_file:
@@ -34,22 +34,22 @@
     - { option: "transport_url", value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ internal_ip }}:5672/'}
     - { option: "core_plugin", value: ml2 }
     - { option: "service_plugins", value: router }
-    - { option: "allow_overlapping_ips", value: "true" }
+    #- { option: "allow_overlapping_ips", value: "true" }
     - { option: "notify_nova_on_port_status_changes", value: "true" } 
     - { option: "notify_nova_on_port_data_changes", value: "true" } 
     - { option: "auth_strategy", value: keystone }
   notify: 
   - restart neutron-services
 
-- name: unset interface_driver option
-  ini_file:
-    path: /etc/neutron/neutron.conf
-    section: DEFAULT
-    option: "interface_driver"
-    state: absent
-  notify:
-  - restart neutron-services
-
+#- name: unset interface_driver option
+#  ini_file:
+#    path: /etc/neutron/neutron.conf
+#    section: DEFAULT
+#    option: "interface_driver"
+#    state: absent
+#  notify:
+#  - restart neutron-services
+#
 - name: configure keystone_authtoken section
   ini_file:
     path: /etc/neutron/neutron.conf
@@ -57,39 +57,31 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
-    - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
-    - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
+    - { option: "www_authenticate_uri", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "auth_url", value: 'http://{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5000' }
+    - { option: "memcached_servers", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:11211' }
     - { option: "auth_type", value: password }
     - { option: "project_domain_name", value: Default}
     - { option: "user_domain_name", value: Default}
     - { option: "project_name", value: service}
     - { option: "username", value: neutron}
     - { option: "password", value: "{{ neutron_identity_password }}" }
-    - { option: "region", value: "{{ region }}" }    
-    #- { option: "region_name", value: "{{ region }}" }
+    #- { option: "region", value: "{{ region }}" }    
+    - { option: "region_name", value: "{{ region }}" }
     #- { option: "service_token_roles_required", value: "true" }
   notify: 
   - restart neutron-services
 
-- name: ensure neutron_authtoken is cleared
-  ini_file:
-    path: /etc/neutron/neutron.conf
-    section: keystone_authtoken
-    option: region_name
-    value: regionOne
-    state: absent
-  notify:
-  - restart neutron-services
+#- name: ensure neutron_authtoken is cleared
+#  ini_file:
+#    path: /etc/neutron/neutron.conf
+#    section: keystone_authtoken
+#    option: region_name
+#    value: regionOne
+#    state: absent
+#  notify:
+#  - restart neutron-services
 
-- name: configure oslo_concurrency section
-  ini_file:
-    path: /etc/neutron/neutron.conf
-    section: oslo_concurrency
-    option: lock_path
-    value: /var/lib/neutron/tmp
-  notify:
-  - restart neutron-services
 
 - name: configure nova section
   ini_file:
@@ -105,10 +97,17 @@
     - { option: "region_name", value: "{{ region }}" }    
     - { option: "project_name", value: service}
     - { option: "username", value: nova}
-    - { option: "password", value: "{{ nova_identity_password }}" }
-    #- { option: "region", value: "{{ region }}" }    
-    
+    - { option: "password", value: "{{ nova_identity_password }}" }  
   notify: 
+  - restart neutron-services
+
+- name: configure oslo_concurrency section
+  ini_file:
+    path: /etc/neutron/neutron.conf
+    section: oslo_concurrency
+    option: lock_path
+    value: /var/lib/neutron/tmp
+  notify:
   - restart neutron-services
 
 - name: configure ml2 plugin
@@ -120,7 +119,7 @@
   loop:
     - { option: "type_drivers", value: "flat,vlan,vxlan" }
     - { option: "tenant_network_types", value: vxlan }
-    - { option: "mechanism_drivers", value: "linuxbridge,l2population" }
+    - { option: "mechanism_drivers", value: "openvswitch,l2population" }
     - { option: "extension_drivers", value: port_security }
     #- { option: "flat_networks", value: provider }
   notify:
@@ -146,14 +145,16 @@
   notify:
   - restart neutron-services
 
-- name: configure ml2 plugin (enable_ipset)
-  ini_file:
-    path: /etc/neutron/plugins/ml2/ml2_conf.ini
-    section: securitygroup
-    option: enable_ipset
-    value: 'true'
-  notify:
-  - restart neutron-services
+#- name: configure ml2 plugin (enable_ipset)
+#  ini_file:
+#    path: /etc/neutron/plugins/ml2/ml2_conf.ini
+#    section: securitygroup
+#    option: enable_ipset
+#    value: 'true'
+#  notify:
+#  - restart neutron-services
+
+
 
 
 # Needed when /proc/sys/net/bridge is missing

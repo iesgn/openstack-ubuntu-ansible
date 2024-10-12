@@ -3,7 +3,6 @@
   apt: name={{ item }}
   loop:
     - placement-api
-    - apache2
     
 - name: ensure placement database connection is configured
   ini_file:
@@ -30,7 +29,6 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "www_authenticate_uri", value: 'http://{{ internal_ip }}:5000' }
     - { option: "auth_url", value: 'http://{{ internal_ip }}:5000' }
     - { option: "memcached_servers", value: '{{ internal_ip }}:11211' }
     - { option: "auth_type", value: password }
@@ -41,16 +39,6 @@
     - { option: "password", value: "{{ placement_identity_password }}" }
   notify:
   - restart placement
-
-#- name: ensure placement_authtoken is cleared
-#  ini_file:
-#    path: /etc/placement/placement.conf
-#    section: keystone_authtoken
-#    option: region_name
-#    value: regionOne
-#    state: absent
-#  notify:
-#  - restart placement
 
 - name: ensure placement db is initialized
   command: /usr/bin/placement-manage db sync

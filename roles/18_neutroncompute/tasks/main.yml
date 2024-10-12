@@ -101,8 +101,8 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "enable_security_group", value: "true" }
-    - { option: "firewall_driver", value: neutron.agent.linux.iptables_firewall.IptablesFirewallDriver }
+    #- { option: "enable_security_group", value: "true" }
+    - { option: "firewall_driver", value: iptables }
   notify:
   - restart neutron-services
 

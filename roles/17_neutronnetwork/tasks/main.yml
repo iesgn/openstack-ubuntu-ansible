@@ -28,7 +28,7 @@
     value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}:5672/'}
     - { option: "core_plugin", value: ml2 }
     - { option: "service_plugins", value: router }
-    - { option: "allow_overlapping_ips", value: "true" }
+    #- { option: "allow_overlapping_ips", value: "true" }
     - { option: "notify_nova_on_port_status_changes", value: "true" }
     - { option: "notify_nova_on_port_data_changes", value: "true" }
     - { option: "auth_strategy", value: keystone }
@@ -108,8 +108,8 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "enable_security_group", value: "true" }
-    - { option: "firewall_driver", value: neutron.agent.linux.iptables_firewall.IptablesFirewallDriver }
+    #- { option: "enable_security_group", value: "true" }
+    - { option: "firewall_driver", value: iptables}
   notify:
   - restart neutron-services
 

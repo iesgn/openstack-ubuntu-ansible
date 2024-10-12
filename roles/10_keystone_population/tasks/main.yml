@@ -57,12 +57,18 @@
 
 - name: ensure glance user is created
   environment: '{{k3}}'
-  command: /usr/bin/openstack user create --domain Default glance --password {{ glance_identity_password }}
+  command: /usr/bin/openstack user create --domain Default glance --password {{ glance_identity_password }} 
   when: result is failed
 
 - name: ensure admin role is added to glance user
   environment: '{{k3}}'
-  command: openstack role add --project service --user glance admin
+  command: openstack role add --project service --user glance admin 
+  
+- name: ensure admin role is added to glance user (2)
+  environment: '{{k3}}'
+  command: openstack role add --user glance --user-domain Default --system all reader
+  
+  
 
 
 

@@ -1,0 +1,26 @@
+all:
+  children:
+    controller_nodes:
+      hosts:
+        controller:
+          ansible_host: 192.168.122.128
+          ansible_ssh_user: usuario
+          #ansible_ssh_private_key_file: .vagrant/machines/controller/libvirt/private_key
+          external_ip: 192.168.122.128
+          internal_ip: 127.0.0.1
+    storage_nodes:
+      hosts:
+        controller:
+          ansible_host: 192.168.122.128
+          ansible_ssh_user: usuario
+          #ansible_ssh_private_key_file: .vagrant/machines/controller/libvirt/private_key
+          external_ip: 192.168.122.128
+          internal_ip: 127.0.0.1
+    compute_nodes:
+      hosts:
+        controller:
+          ansible_host: 192.168.122.128
+          ansible_ssh_user: usuario
+          #ansible_ssh_private_key_file: .vagrant/machines/compute/libvirt/private_key
+          external_ip: 192.168.122.128
+          internal_ip: 127.0.0.1

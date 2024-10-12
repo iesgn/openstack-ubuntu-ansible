@@ -4,6 +4,7 @@
     - nova-api
     - nova-scheduler
     - nova-conductor
-    - nova-spiceproxy
+    - nova-novncproxy
+    #- nova-spiceproxy
 
 
