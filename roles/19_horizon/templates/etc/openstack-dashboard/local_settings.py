@@ -94,26 +94,19 @@ SECRET_KEY = secret_key.generate_or_read_from_file('/var/lib/openstack-dashboard
 # https://docs.djangoproject.com/en/1.11/topics/http/sessions/.
 
 OPENSTACK_HOST = "{{ internal_ip }}"
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+    'default': {    
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
         'LOCATION': OPENSTACK_HOST + ':11211',
     },
 }
-
-
-
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-#    }
-#}
-
 # If you use ``tox -e runserver`` for developments,then configure
 # SESSION_ENGINE to django.contrib.sessions.backends.signed_cookies
 # as shown below:
 #SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
-SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+
 
 # Send email to the console by default
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -126,7 +119,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 #EMAIL_HOST_USER = 'djangomail'
 #EMAIL_HOST_PASSWORD = 'top-secret!'
 
-OPENSTACK_KEYSTONE_URL = "http://%s:5000/v3" % OPENSTACK_HOST
+#OPENSTACK_HOST = "127.0.0.1"
+OPENSTACK_KEYSTONE_URL = "http://%s/identity/v3" % OPENSTACK_HOST
 
 # The timezone of the server. This should correspond with the timezone
 # of your entire OpenStack installation, and hopefully be in UTC.
@@ -243,6 +237,14 @@ LOGGING = {
         'django': {
             'handlers': ['console'],
             'level': 'DEBUG',
+            'propagate': False,
+        },
+        # VariableDoesNotExist error in the debug level from django.template
+        # is VERY noisy and it is output even for valid cases,
+        # so set the default log level of django.template to INFO.
+        'django.template': {
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': False,
         },
         # Logging from django.db.backends is VERY verbose, send to null
@@ -391,17 +393,19 @@ SECURITY_GROUP_RULES = {
 
 # The default theme if no cookie is present
 DEFAULT_THEME = 'default'
-OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+#OPENSTACK_KEYSTONE_MULTIDOMAIN_SUPPORT = True
+
 # Default Ubuntu apache configuration uses /horizon as the application root.
 WEBROOT='/horizon/'
 
 # By default, validation of the HTTP Host header is disabled.  Production
 # installations should have this set accordingly.  For more information
 # see https://docs.djangoproject.com/en/dev/ref/settings/.
-ALLOWED_HOSTS = '*'
+ALLOWED_HOSTS = ['*']
 
 # Compress all assets offline as part of packaging installation
 COMPRESS_OFFLINE = True
+
 
 OPENSTACK_API_VERSIONS = {
     "identity": 3,
@@ -412,3 +416,4 @@ OPENSTACK_API_VERSIONS = {
 
 OPENSTACK_KEYSTONE_DEFAULT_DOMAIN = "Default"
 OPENSTACK_KEYSTONE_DEFAULT_ROLE = "user"
+

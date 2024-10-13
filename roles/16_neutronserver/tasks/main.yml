@@ -31,13 +31,14 @@
     option: "{{ item.option }}"
     value: "{{ item.value }}"
   loop:
-    - { option: "transport_url", value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ internal_ip }}:5672/'}
     - { option: "core_plugin", value: ml2 }
     - { option: "service_plugins", value: router }
-    #- { option: "allow_overlapping_ips", value: "true" }
+    - { option: "transport_url", value: 'rabbit://{{ rabbit_user }}:{{ rabbit_password }}@{{ internal_ip }}:5672/'}
+    - { option: "auth_strategy", value: keystone }
+   #- { option: "allow_overlapping_ips", value: "true" }
     - { option: "notify_nova_on_port_status_changes", value: "true" } 
     - { option: "notify_nova_on_port_data_changes", value: "true" } 
-    - { option: "auth_strategy", value: keystone }
+    
   notify: 
   - restart neutron-services
 
@@ -67,7 +68,7 @@
     - { option: "username", value: neutron}
     - { option: "password", value: "{{ neutron_identity_password }}" }
     #- { option: "region", value: "{{ region }}" }    
-    - { option: "region_name", value: "{{ region }}" }
+    #- { option: "region_name", value: "{{ region }}" }
     #- { option: "service_token_roles_required", value: "true" }
   notify: 
   - restart neutron-services
@@ -121,7 +122,6 @@
     - { option: "tenant_network_types", value: vxlan }
     - { option: "mechanism_drivers", value: "openvswitch,l2population" }
     - { option: "extension_drivers", value: port_security }
-    #- { option: "flat_networks", value: provider }
   notify:
   - restart neutron-services
 
@@ -133,7 +133,6 @@
     value: 'provider'
   notify:
   - restart neutron-services
-
 
 
 - name: configure ml2 plugin (vni_ranges)
@@ -154,7 +153,52 @@
 #  notify:
 #  - restart neutron-services
 
+- name: configure openvswitch agent
+  ini_file:
+    path: /etc/neutron/plugins/ml2/openvswitch_agent.ini
+    section: ovs
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "bridge_mappings", value: "provider:br-provider" }
+    - { option: "local_ip", value: "{{ external_ip }}" }
+  notify:
+  - restart neutron-services
 
+- name: configure openvswitch agent section agent
+  ini_file:
+    path: /etc/neutron/plugins/ml2/openvswitch_agent.ini
+    section: agent
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "tunnel_types", value: vxlan }
+    - { option: "l2_population", value: True }
+  notify:
+  - restart neutron-services
+
+- name: configure openvswitch agent section securitygroup
+  ini_file:
+    path: /etc/neutron/plugins/ml2/openvswitch_agent.ini
+    section: securitygroup
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "enable_security_group", value: True }
+    - { option: "firewall_driver", value: iptables_hybrid }
+  notify:
+  - restart neutron-services
+
+- name: Create bridge br-provider
+  openvswitch.openvswitch.openvswitch_bridge:
+    bridge: br-provider
+    state: present
+
+- name: Add port to bridge br-provider
+  openvswitch.openvswitch.openvswitch_port:
+    bridge: br-provider
+    port: "{{external_interface}}"
+    state: present
 
 
 # Needed when /proc/sys/net/bridge is missing
@@ -174,7 +218,54 @@
     name: net.bridge.bridge-nf-call-ip6tables
     value: '1'
     reload: yes
+########
+# Layer-3
+########
 
+- name: configure the layer 3 agent
+  ini_file:
+    path: /etc/neutron/l3_agent.ini
+    section: DEFAULT
+    option: "interface_driver"
+    value: openvswitch
+  notify:
+  - restart neutron-services
+
+###########
+# DHCP
+###########
+
+
+- name: configure the DHCP agent
+  ini_file:
+    path: /etc/neutron/dhcp_agent.ini
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "interface_driver", value: openvswitch }
+    - { option: "dhcp_driver", value: neutron.agent.linux.dhcp.Dnsmasq }
+    - { option: "enable_isolated_metadata", value: "true" }
+    #- { option: "force_metadata", value: "true" }
+  notify:
+  - restart neutron-services
+
+###########
+# METADATA
+###########
+
+
+- name: configure the metadata agent
+  ini_file:
+    path: /etc/neutron/metadata_agent.ini
+    section: DEFAULT
+    option: "{{ item.option }}"
+    value: "{{ item.value }}"
+  loop:
+    - { option: "nova_metadata_host", value: '{{ hostvars[groups["controller_nodes"][0]]["internal_ip"] }}' }
+    - { option: "metadata_proxy_shared_secret", value: "{{ shared_secret }}" }
+  notify:
+  - restart neutron-services
 
 - name: ensure neutron db is initialized
   command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
